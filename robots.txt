@@ -1,0 +1,36 @@
+# robots.txt — Diginity Media
+# https://www.diginity.in/robots.txt
+
+User-agent: *
+Allow: /
+
+# Block admin/private paths
+Disallow: /admin/
+Disallow: /wp-admin/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /api/
+
+# Allow all bots full access to content
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+# Sitemap location
+Sitemap: https://www.diginity.in/sitemap.xml

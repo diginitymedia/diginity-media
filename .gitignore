@@ -1,0 +1,25 @@
+# ── OS files ─────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Editor files ─────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Node (backend only) ──────────────────────────────────────
+backend/node_modules/
+backend/.env
+backend/leads.json
+
+# ── Build artifacts ──────────────────────────────────────────
+.cache/
+dist/
+*.zip
+*.tar.gz
+
+# ── Local test files ─────────────────────────────────────────
+test_*.js
+*.backup.html
