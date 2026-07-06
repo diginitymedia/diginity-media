@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diginity Media — Pricing Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090F;--bg2:#0C0F19;--bg3:#111827;
+  --surf:rgba(255,255,255,.045);--surf2:rgba(255,255,255,.08);
+  --bdr:rgba(255,255,255,.09);--bdr2:rgba(255,255,255,.18);
+  --text:#EEF2FF;--muted:#7B879E;--muted2:#9AA3B4;
+  --green:#3DFFA0;--blue:#4D8EFF;
+  --grad:linear-gradient(135deg,#3DFFA0,#4D8EFF);
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Roboto',Arial,sans-serif;
+  min-height:100vh;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+/* Orbs */
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0}
+.o1{width:500px;height:500px;background:radial-gradient(circle,rgba(61,255,160,.07),transparent 70%);top:-150px;right:-100px}
+.o2{width:400px;height:400px;background:radial-gradient(circle,rgba(77,142,255,.07),transparent 70%);bottom:20%;left:-100px}
+
+/* Layout */
+.container{max-width:960px;margin:0 auto;padding:0 clamp(16px,5vw,40px);position:relative;z-index:1}
+
+/* Header */
+.calc-header{padding:clamp(40px,8vw,72px) 0 clamp(24px,4vw,40px);text-align:center}
+.calc-header .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(61,255,160,.08);border:1px solid rgba(61,255,160,.22);color:var(--green);font-size:12px;font-weight:600;padding:6px 16px;border-radius:100px;margin-bottom:20px;letter-spacing:.04em}
+.calc-header h1{font-family: 'Roboto', Arial, sans-serif;font-size:clamp(28px,5vw,52px);font-weight:800;line-height:1.14;letter-spacing:-0.3px;margin-bottom:14px}
+.calc-header p{color:var(--muted2);font-size:clamp(14px,1.8vw,17px);max-width:520px;margin:0 auto;line-height:1.7}
+
+/* Main grid */
+.calc-grid{display:grid;grid-template-columns:1fr 340px;gap:24px;padding-bottom:80px}
+
+/* LEFT — services */
+.services-panel{display:flex;flex-direction:column;gap:20px}
+
+/* Category block */
+.cat-block{background:var(--surf);border:1px solid var(--bdr);border-radius:16px;overflow:hidden;transition:border-color .2s}
+.cat-block:has(.svc-item.on){border-color:rgba(61,255,160,.25)}
+.cat-header{padding:16px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--bdr);cursor:pointer;user-select:none;transition:background .2s}
+.cat-header:hover{background:var(--surf2)}
+.cat-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.cat-header h3{font-family: 'Roboto', Arial, sans-serif;font-size:15px;font-weight:700;flex:1}
+.cat-count{font-size:11px;font-weight:600;background:rgba(61,255,160,.12);color:var(--green);padding:3px 9px;border-radius:100px;display:none}
+.cat-count.show{display:inline-block}
+.cat-chevron{color:var(--muted);font-size:16px;transition:transform .3s;flex-shrink:0}
+.cat-block.collapsed .cat-chevron{transform:rotate(-90deg)}
+.cat-items{padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cat-block.collapsed .cat-items{display:none}
+
+/* Service item */
+.svc-item{
+  border:1.5px solid var(--bdr);border-radius:10px;padding:12px 14px;
+  cursor:pointer;transition:all .2s;user-select:none;position:relative;
+  background:var(--bg2);
+}
+.svc-item:hover{border-color:var(--bdr2);transform:translateY(-1px)}
+.svc-item.on{border-color:var(--green);background:rgba(61,255,160,.06)}
+.svc-item.on::before{content:'✓';position:absolute;top:8px;right:10px;font-size:11px;font-weight:700;color:var(--green)}
+.svc-item-name{font-family: 'Roboto', Arial, sans-serif;font-size:13px;font-weight:600;margin-bottom:4px;padding-right:16px}
+.svc-item-price{font-size:11px;color:var(--muted);font-weight:500}
+.svc-item-price strong{color:var(--muted2);font-weight:600}
+
+/* Duration selector */
+.duration-sel{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.dur-btn{flex:1;min-width:80px;padding:8px 10px;background:var(--bg2);border:1.5px solid var(--bdr);border-radius:8px;color:var(--muted);font-family: 'Roboto', Arial, sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;text-align:center}
+.dur-btn:hover{border-color:var(--bdr2);color:var(--text)}
+.dur-btn.on{border-color:var(--blue);background:rgba(77,142,255,.08);color:var(--blue);font-weight:600}
+
+/* RIGHT — summary */
+.summary-panel{position:sticky;top:20px;height:fit-content}
+.summary-card{background:var(--surf);border:1px solid var(--bdr);border-radius:18px;overflow:hidden}
+.summary-top{background:linear-gradient(145deg,rgba(61,255,160,.06),rgba(77,142,255,.06));padding:24px 24px 20px;border-bottom:1px solid var(--bdr);position:relative}
+.summary-top::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--grad)}
+.summary-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.summary-total{font-family: 'Roboto', Arial, sans-serif;font-size:clamp(28px,5vw,40px);font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.summary-period{font-size:13px;color:var(--muted);margin-top:3px}
+.summary-savings{display:none;margin-top:10px;background:rgba(61,255,160,.08);border:1px solid rgba(61,255,160,.2);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--green);font-weight:600}
+.summary-savings.show{display:block}
+
+.summary-body{padding:20px 24px}
+.summary-items{display:flex;flex-direction:column;gap:0;margin-bottom:16px;min-height:80px}
+.sum-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--bdr);font-size:13px}
+.sum-item:last-child{border-bottom:none}
+.sum-item-name{color:var(--muted2);flex:1;padding-right:8px;line-height:1.4}
+.sum-item-price{font-weight:600;color:var(--text);white-space:nowrap;flex-shrink:0}
+.sum-item-del{color:var(--red);font-size:16px;cursor:pointer;margin-left:8px;padding:0 4px;flex-shrink:0;line-height:1;transition:opacity .2s}
+.sum-item-del:hover{opacity:.7}
+
+.empty-state{text-align:center;padding:20px 10px;color:var(--muted);font-size:13px;line-height:1.6}
+.empty-icon{font-size:28px;display:block;margin-bottom:8px}
+
+.summary-breakdown{background:var(--bg2);border-radius:10px;padding:14px;margin-bottom:16px}
+.breakdown-row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted2);padding:4px 0}
+.breakdown-row.total{border-top:1px solid var(--bdr);margin-top:6px;padding-top:8px;font-weight:700;color:var(--text);font-size:14px}
+.breakdown-row.discount{color:var(--green);font-weight:600}
+
+.btn-quote{width:100%;background:var(--green);color:#07090F;border:none;padding:14px;border-radius:10px;font-family: 'Roboto', Arial, sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .2s;letter-spacing:.01em;margin-bottom:10px}
+.btn-quote:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(61,255,160,.3)}
+.btn-quote:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-wa{width:100%;background:#25D366;color:#fff;border:none;padding:12px;border-radius:10px;font-family: 'Roboto', Arial, sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px}
+.btn-wa:hover{opacity:.9;transform:translateY(-1px)}
+.btn-wa:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.summary-note{font-size:11px;color:var(--muted);text-align:center;line-height:1.6}
+
+/* Promo input */
+.promo-row{display:flex;gap:8px;margin-bottom:14px}
+.promo-input{flex:1;background:var(--bg2);border:1.5px solid var(--bdr);border-radius:8px;padding:10px 13px;color:var(--text);font-family: 'Roboto', Arial, sans-serif;font-size:13px;outline:none;transition:border-color .2s}
+.promo-input:focus{border-color:var(--bdr2)}
+.promo-input::placeholder{color:var(--muted)}
+.promo-btn{background:var(--surf2);border:1.5px solid var(--bdr2);color:var(--text);padding:10px 14px;border-radius:8px;font-family: 'Roboto', Arial, sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.promo-btn:hover{border-color:var(--green);color:var(--green)}
+.promo-msg{font-size:11px;font-weight:600;margin-bottom:10px;display:none}
+.promo-msg.ok{color:var(--green);display:block}
+.promo-msg.err{color:var(--red);display:block}
+
+/* Quote modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(7,9,15,.85);backdrop-filter:blur(8px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--bdr2);border-radius:22px;padding:clamp(24px,5vw,44px);max-width:520px;width:100%;position:relative;max-height:90vh;overflow-y:auto}
+.modal-close{position:absolute;top:16px;right:16px;background:var(--surf);border:1px solid var(--bdr);color:var(--muted);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;transition:all .2s}
+.modal-close:hover{color:var(--text);border-color:var(--bdr2)}
+.modal h2{font-family: 'Roboto', Arial, sans-serif;font-size:22px;font-weight:800;margin-bottom:6px}
+.modal-sub{color:var(--muted2);font-size:14px;margin-bottom:24px}
+.modal-quote-box{background:linear-gradient(145deg,rgba(61,255,160,.06),rgba(77,142,255,.06));border:1px solid rgba(61,255,160,.2);border-radius:12px;padding:18px;margin-bottom:20px}
+.mqb-total{font-family: 'Roboto', Arial, sans-serif;font-size:28px;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:4px}
+.mqb-items{font-size:12px;color:var(--muted2);line-height:1.8;margin-top:8px}
+.modal-fgroup{margin-bottom:14px}
+.modal-fgroup label{font-size:13px;font-weight:500;color:var(--muted2);display:block;margin-bottom:6px}
+.modal-fgroup input,.modal-fgroup textarea{width:100%;background:var(--bg);border:1.5px solid var(--bdr);border-radius:9px;padding:12px 14px;color:var(--text);font-family: 'Roboto', Arial, sans-serif;font-size:14px;outline:none;transition:border-color .2s}
+.modal-fgroup input:focus,.modal-fgroup textarea:focus{border-color:var(--green)}
+.modal-fgroup textarea{resize:vertical;min-height:80px}
+.modal-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-submit{width:100%;background:var(--green);color:#07090F;border:none;padding:14px;border-radius:10px;font-family: 'Roboto', Arial, sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .2s;margin-top:6px}
+.modal-submit:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(61,255,160,.3)}
+
+/* Success screen */
+.success-screen{display:none;text-align:center;padding:20px}
+.success-screen.show{display:block}
+.success-icon{width:68px;height:68px;border-radius:50%;background:rgba(61,255,160,.1);border:2px solid var(--green);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:28px;animation:pop .4s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes pop{0%{transform:scale(0)}100%{transform:scale(1)}}
+.success-screen h3{font-family: 'Roboto', Arial, sans-serif;font-size:22px;font-weight:800;margin-bottom:10px}
+.success-screen p{color:var(--muted2);font-size:14px;margin-bottom:24px;line-height:1.6}
+.btn-wa-big{display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;padding:14px 28px;border-radius:10px;font-size:15px;font-weight:700;text-decoration:none;transition:all .2s}
+.btn-wa-big:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(37,211,102,.4)}
+
+/* Responsive */
+@media(max-width:768px){
+  .calc-grid{grid-template-columns:1fr}
+  .summary-panel{position:static}
+  .cat-items{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .cat-items{grid-template-columns:1fr}
+  .modal-row{grid-template-columns:1fr}
+}
+
+/* ── Roboto Typography Corrections ── */
+h1{font-family:'Roboto',Arial,sans-serif;font-weight:900;line-height:1.1;letter-spacing:-0.5px}
+h2{font-family:'Roboto',Arial,sans-serif;font-weight:900;line-height:1.15;letter-spacing:-0.2px}
+h3{font-family:'Roboto',Arial,sans-serif;font-weight:700;line-height:1.35;letter-spacing:0}
+h4{font-family:'Roboto',Arial,sans-serif;font-weight:700}
+body{font-family:'Roboto',Arial,sans-serif;-webkit-font-smoothing:antialiased}
+</style>
+</head>
+<body>
+
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+
+<!-- HEADER -->
+<div class="calc-header">
+  <div class="container">
+    <div class="badge">⚡ Instant Pricing Calculator</div>
+    <h1>Build your custom<br>marketing package</h1>
+    <p>Select the services you need. Get an instant price estimate. No hidden fees, no lock-ins.</p>
+    <!-- Duration toggle -->
+    <div class="duration-sel" style="justify-content:center;margin-top:20px">
+      <button class="dur-btn on" data-dur="monthly" onclick="setDuration('monthly',this)">Monthly</button>
+      <button class="dur-btn" data-dur="quarterly" onclick="setDuration('quarterly',this)">Quarterly <span style="color:#3DFFA0;font-size:10px">–5%</span></button>
+      <button class="dur-btn" data-dur="biannual" onclick="setDuration('biannual',this)">6 Months <span style="color:#3DFFA0;font-size:10px">–10%</span></button>
+      <button class="dur-btn" data-dur="annual" onclick="setDuration('annual',this)">Annual <span style="color:#3DFFA0;font-size:10px">–20%</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN GRID -->
+<div class="container">
+  <div class="calc-grid">
+
+    <!-- LEFT: Services -->
+    <div class="services-panel" id="servicesPanel"></div>
+
+    <!-- RIGHT: Summary -->
+    <div class="summary-panel">
+      <div class="summary-card">
+        <div class="summary-top">
+          <div class="summary-label">Your Estimate</div>
+          <div class="summary-total" id="totalDisplay">₹0</div>
+          <div class="summary-period" id="periodDisplay">per month</div>
+          <div class="summary-savings" id="savingsDisplay"></div>
+        </div>
+        <div class="summary-body">
+          <div class="summary-items" id="summaryItems">
+            <div class="empty-state"><span class="empty-icon">🎯</span>Select services on the left<br>to build your package</div>
+          </div>
+          <div class="summary-breakdown" id="breakdown" style="display:none">
+            <div class="breakdown-row"><span>Subtotal</span><span id="bd-sub">₹0</span></div>
+            <div class="breakdown-row discount" id="bd-disc-row" style="display:none"><span id="bd-disc-label">Discount</span><span id="bd-disc">-₹0</span></div>
+            <div class="breakdown-row discount" id="bd-promo-row" style="display:none"><span>Promo Code</span><span id="bd-promo">-₹0</span></div>
+            <div class="breakdown-row total"><span>Total / month</span><span id="bd-total">₹0</span></div>
+          </div>
+          <!-- Promo code -->
+          <div class="promo-row">
+            <input type="text" class="promo-input" id="promoInput" placeholder="Promo code (try: LAUNCH25)">
+            <button class="promo-btn" onclick="applyPromo()">Apply</button>
+          </div>
+          <div class="promo-msg" id="promoMsg"></div>
+          <button class="btn-quote" id="btnQuote" disabled onclick="openModal()">Get Custom Quote →</button>
+          <button class="btn-wa" id="btnWA" disabled onclick="openWA()">💬 WhatsApp Your Quote</button>
+          <div class="summary-note">✅ Free strategy call included<br>🔒 No contracts · 30-day rolling</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- QUOTE MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+
+    <div id="modalForm">
+      <h2>Get Your Free Quote</h2>
+      <div class="modal-sub">We'll send a detailed proposal within 4 hours.</div>
+
+      <div class="modal-quote-box">
+        <div class="summary-label" style="margin-bottom:4px">Your selected package</div>
+        <div class="mqb-total" id="modalTotal">₹0/mo</div>
+        <div class="mqb-items" id="modalItems"></div>
+      </div>
+
+      <div class="modal-row">
+        <div class="modal-fgroup">
+          <label>Full Name *</label>
+          <input type="text" id="mName" placeholder="Rahul Sharma">
+        </div>
+        <div class="modal-fgroup">
+          <label>Phone / WhatsApp *</label>
+          <input type="tel" id="mPhone" placeholder="+91 98765 43210">
+        </div>
+      </div>
+      <div class="modal-fgroup">
+        <label>Email Address *</label>
+        <input type="email" id="mEmail" placeholder="rahul@company.com">
+      </div>
+      <div class="modal-fgroup">
+        <label>Company / Website</label>
+        <input type="text" id="mCompany" placeholder="Your company name">
+      </div>
+      <div class="modal-fgroup">
+        <label>Anything specific you want?</label>
+        <textarea id="mNote" placeholder="E.g. We need SEO focused on Bangalore + Google Ads for lead generation..."></textarea>
+      </div>
+      <button class="modal-submit" onclick="submitQuote()">Send My Quote Request →</button>
+    </div>
+
+    <div class="success-screen" id="modalSuccess">
+      <div class="success-icon">✅</div>
+      <h3>Quote request sent!</h3>
+      <p>We're preparing your custom proposal. Expect a WhatsApp message from us within 4 hours.</p>
+      <a class="btn-wa-big" id="waLink" href="#" target="_blank" rel="noopener">💬 Chat on WhatsApp Now</a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── DATA ─────────────────────────────────────────────────── */
+const CATEGORIES = [
+  {
+    id:'seo', label:'SEO Services', icon:'📈', color:'rgba(61,255,160,.1)',
+    services:[
+      {id:'tech-seo',   name:'Technical SEO',    price:12000, desc:'Audit, fixes, schema, CWV'},
+      {id:'local-seo',  name:'Local SEO',         price:8000,  desc:'GBP, Maps, citations'},
+      {id:'content-seo',name:'Content SEO',       price:14000, desc:'Clusters, pillar pages'},
+      {id:'link-build', name:'Link Building',     price:18000, desc:'PR, outreach, niche edits'},
+      {id:'ecom-seo',   name:'Ecommerce SEO',     price:16000, desc:'Product & category SEO'},
+      {id:'ai-seo',     name:'AI SEO / AEO',      price:10000, desc:'ChatGPT & AI visibility'},
+    ]
+  },
+  {
+    id:'paid', label:'Paid Advertising', icon:'💰', color:'rgba(77,142,255,.1)',
+    services:[
+      {id:'google-ads', name:'Google Ads',         price:15000, desc:'Search, Shopping, PMax'},
+      {id:'meta-ads',   name:'Meta Ads (FB+IG)',   price:15000, desc:'Prospecting & retargeting'},
+      {id:'linkedin-ads',name:'LinkedIn Ads',      price:20000, desc:'B2B lead generation'},
+      {id:'youtube-ads',name:'YouTube Ads',        price:12000, desc:'In-stream & bumper ads'},
+      {id:'tiktok-ads', name:'TikTok Ads',         price:10000, desc:'Short-form video ads'},
+      {id:'prog-ads',   name:'Programmatic Ads',   price:18000, desc:'DSP, contextual targeting'},
+    ]
+  },
+  {
+    id:'social', label:'Social Media', icon:'📱', color:'rgba(236,72,153,.1)',
+    services:[
+      {id:'ig-mktg',    name:'Instagram Marketing',price:12000, desc:'Reels, content, growth'},
+      {id:'li-mktg',    name:'LinkedIn Marketing', price:10000, desc:'Thought leadership, B2B'},
+      {id:'fb-mktg',    name:'Facebook Marketing', price:8000,  desc:'Page growth, FB Shop'},
+      {id:'wa-mktg',    name:'WhatsApp Marketing', price:8000,  desc:'Broadcasts, automation'},
+      {id:'influence',  name:'Influencer Marketing',price:20000,desc:'Nano to macro campaigns'},
+      {id:'community',  name:'Community Management',price:10000,desc:'Discord, Telegram, WA groups'},
+    ]
+  },
+  {
+    id:'web', label:'Web & Design', icon:'⚡', color:'rgba(168,85,247,.1)',
+    services:[
+      {id:'web-dev',    name:'Website Development',price:35000, desc:'React/Angular, SEO-ready'},
+      {id:'landing',    name:'Landing Pages (×2)',  price:12000, desc:'High-converting, A/B tested'},
+      {id:'ui-ux',      name:'UI/UX Design',        price:20000, desc:'Figma, wireframes, systems'},
+      {id:'speed-opt',  name:'Speed Optimisation',  price:8000,  desc:'CWV, WebP, CDN, LCP fix'},
+      {id:'cro',        name:'CRO Audit',           price:12000, desc:'Heatmaps, funnel analysis'},
+      {id:'branding',   name:'Brand Identity',      price:25000, desc:'Logo, guidelines, identity'},
+    ]
+  },
+  {
+    id:'content', label:'Content Marketing', icon:'✍️', color:'rgba(245,158,11,.1)',
+    services:[
+      {id:'seo-blogs',  name:'SEO Blogs (×8/mo)',   price:16000, desc:'Long-form, E-E-A-T optimised'},
+      {id:'copywrite',  name:'Website Copywriting', price:18000, desc:'Homepage, service pages'},
+      {id:'ai-content', name:'AI-Optimised Content',price:10000, desc:'AEO, ChatGPT visibility'},
+      {id:'pr-content', name:'PR & Press Releases',  price:12000, desc:'Media outreach, news wire'},
+      {id:'video-scripts',name:'Video Scripts (×4)',price:8000,  desc:'Ads, explainers, hooks'},
+      {id:'newsletter', name:'Email Newsletter',    price:6000,  desc:'Weekly, designed, sent'},
+    ]
+  },
+  {
+    id:'email', label:'Email & CRM', icon:'📧', color:'rgba(20,184,166,.1)',
+    services:[
+      {id:'email-mktg', name:'Email Marketing',    price:10000, desc:'Flows, sequences, broadcasts'},
+      {id:'wa-auto',    name:'WhatsApp Automation', price:8000,  desc:'API flows, cart recovery'},
+      {id:'crm-setup',  name:'CRM Setup',           price:15000, desc:'HubSpot/Zoho, pipeline'},
+      {id:'mktg-auto',  name:'Marketing Automation',price:12000, desc:'Multi-channel workflows'},
+    ]
+  },
+  {
+    id:'video', label:'Video Marketing', icon:'🎬', color:'rgba(255,107,107,.1)',
+    services:[
+      {id:'reels',      name:'Reels (×8/mo)',       price:14000, desc:'Hook-driven, edited, posted'},
+      {id:'yt-mgmt',    name:'YouTube Management',  price:12000, desc:'SEO, thumbnails, growth'},
+      {id:'vid-prod',   name:'Video Production',    price:30000, desc:'Brand film or explainer'},
+      {id:'motion',     name:'Motion Graphics',     price:10000, desc:'Animations, social clips'},
+    ]
+  },
+  {
+    id:'analytics', label:'Analytics & AI', icon:'📊', color:'rgba(77,142,255,.1)',
+    services:[
+      {id:'ga4-setup',  name:'GA4 + GTM Setup',     price:8000,  desc:'Events, goals, attribution'},
+      {id:'dashboards', name:'Looker Studio Dash',   price:10000, desc:'Custom monthly dashboards'},
+      {id:'ai-strategy',name:'AI Marketing Strategy',price:15000, desc:'Predictive, personalisation'},
+      {id:'comp-intel', name:'Competitive Intel',    price:8000,  desc:'Ads spy, keyword gaps'},
+    ]
+  },
+];
+
+/* ── STATE ────────────────────────────────────────────────── */
+let selected  = {}; // {id: price}
+let duration  = 'monthly';
+let promoDisc = 0;
+const PROMOS  = { 'LAUNCH25': 25, 'DIGINITY10': 10, 'GROW20': 20 };
+const DURATION_DISC = { monthly: 0, quarterly: 5, biannual: 10, annual: 20 };
+const DURATION_LABEL = { monthly:'per month', quarterly:'per month (3-month plan)', biannual:'per month (6-month plan)', annual:'per month (annual plan)' };
+
+/* ── RENDER SERVICES ──────────────────────────────────────── */
+function renderServices() {
+  const panel = document.getElementById('servicesPanel');
+  panel.innerHTML = CATEGORIES.map(cat => `
+    <div class="cat-block" id="cat-${cat.id}">
+      <div class="cat-header" onclick="toggleCat('${cat.id}')">
+        <div class="cat-icon" style="background:${cat.color}">${cat.icon}</div>
+        <h3>${cat.label}</h3>
+        <span class="cat-count" id="cnt-${cat.id}">0</span>
+        <span class="cat-chevron">▾</span>
+      </div>
+      <div class="cat-items">
+        ${cat.services.map(s => `
+          <div class="svc-item" id="si-${s.id}" onclick="toggleSvc('${s.id}', ${s.price}, '${s.name}')">
+            <div class="svc-item-name">${s.name}</div>
+            <div class="svc-item-price"><strong>₹${fmt(s.price)}</strong>/mo</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleCat(id) {
+  document.getElementById('cat-'+id).classList.toggle('collapsed');
+}
+
+/* ── TOGGLE SERVICE ───────────────────────────────────────── */
+function toggleSvc(id, price, name) {
+  if (selected[id]) {
+    delete selected[id];
+    document.getElementById('si-'+id).classList.remove('on');
+  } else {
+    selected[id] = { price, name };
+    document.getElementById('si-'+id).classList.add('on');
+  }
+  updateCounts();
+  updateSummary();
+}
+
+function removeSvc(id) {
+  delete selected[id];
+  document.getElementById('si-'+id)?.classList.remove('on');
+  updateCounts();
+  updateSummary();
+}
+
+function updateCounts() {
+  CATEGORIES.forEach(cat => {
+    const count = cat.services.filter(s => selected[s.id]).length;
+    const el = document.getElementById('cnt-'+cat.id);
+    if (count > 0) { el.textContent = count; el.classList.add('show'); }
+    else { el.classList.remove('show'); }
+  });
+}
+
+/* ── SUMMARY ──────────────────────────────────────────────── */
+function updateSummary() {
+  const items = Object.entries(selected);
+  const subtotal = items.reduce((s,[,v]) => s + v.price, 0);
+  const durDisc  = DURATION_DISC[duration];
+  const durAmt   = Math.round(subtotal * durDisc / 100);
+  const promoAmt = Math.round(subtotal * promoDisc / 100);
+  const total    = Math.max(0, subtotal - durAmt - promoAmt);
+  const hasItems = items.length > 0;
+
+  // Summary items list
+  const itemsEl = document.getElementById('summaryItems');
+  if (!hasItems) {
+    itemsEl.innerHTML = '<div class="empty-state"><span class="empty-icon">🎯</span>Select services on the left<br>to build your package</div>';
+  } else {
+    itemsEl.innerHTML = items.map(([id,v]) => `
+      <div class="sum-item">
+        <span class="sum-item-name">${v.name}</span>
+        <span class="sum-item-price">₹${fmt(v.price)}</span>
+        <span class="sum-item-del" onclick="removeSvc('${id}')" title="Remove">×</span>
+      </div>
+    `).join('');
+  }
+
+  // Totals
+  document.getElementById('totalDisplay').textContent = hasItems ? '₹' + fmt(total) : '₹0';
+  document.getElementById('periodDisplay').textContent = DURATION_LABEL[duration];
+  document.getElementById('breakdown').style.display = hasItems ? 'block' : 'none';
+  document.getElementById('bd-sub').textContent    = '₹'+fmt(subtotal);
+  document.getElementById('bd-total').textContent  = '₹'+fmt(total)+'/mo';
+
+  const discRow = document.getElementById('bd-disc-row');
+  if (durAmt > 0) { discRow.style.display='flex'; document.getElementById('bd-disc-label').textContent=`${durDisc}% plan discount`; document.getElementById('bd-disc').textContent='-₹'+fmt(durAmt); }
+  else { discRow.style.display='none'; }
+
+  const promoRow = document.getElementById('bd-promo-row');
+  if (promoAmt > 0) { promoRow.style.display='flex'; document.getElementById('bd-promo').textContent='-₹'+fmt(promoAmt); }
+  else { promoRow.style.display='none'; }
+
+  const savEl = document.getElementById('savingsDisplay');
+  const totalSaved = durAmt + promoAmt;
+  if (totalSaved > 0 && hasItems) { savEl.textContent = `🎉 You save ₹${fmt(totalSaved)}/month`; savEl.classList.add('show'); }
+  else { savEl.classList.remove('show'); }
+
+  // Buttons
+  document.getElementById('btnQuote').disabled = !hasItems;
+  document.getElementById('btnWA').disabled    = !hasItems;
+
+  return { total, subtotal, items };
+}
+
+/* ── DURATION ─────────────────────────────────────────────── */
+function setDuration(d, btn) {
+  duration = d;
+  document.querySelectorAll('.dur-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  updateSummary();
+}
+
+/* ── PROMO CODE ───────────────────────────────────────────── */
+function applyPromo() {
+  const code = document.getElementById('promoInput').value.trim().toUpperCase();
+  const msg  = document.getElementById('promoMsg');
+  if (PROMOS[code]) {
+    promoDisc = PROMOS[code];
+    msg.className = 'promo-msg ok';
+    msg.textContent = `✓ Code applied! ${promoDisc}% off your package`;
+  } else {
+    promoDisc = 0;
+    msg.className = 'promo-msg err';
+    msg.textContent = `✗ Invalid code. Try LAUNCH25 for 25% off.`;
+  }
+  updateSummary();
+}
+
+/* ── MODAL ────────────────────────────────────────────────── */
+function openModal() {
+  const { total, items } = updateSummary();
+  document.getElementById('modalTotal').textContent = '₹' + fmt(total) + '/month';
+  document.getElementById('modalItems').innerHTML = Object.values(selected).map(v => '• ' + v.name).join('<br>');
+  document.getElementById('modal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modal')) closeModal();
+}
+
+function submitQuote() {
+  const name  = document.getElementById('mName').value.trim();
+  const phone = document.getElementById('mPhone').value.trim();
+  const email = document.getElementById('mEmail').value.trim();
+  if (!name || !phone || !email) { alert('Please fill in Name, Phone and Email.'); return; }
+
+  const { total } = updateSummary();
+  const services = Object.values(selected).map(v => v.name).join(', ');
+  const note  = document.getElementById('mNote').value.trim();
+
+  const msg = encodeURIComponent(
+    `🚀 *Quote Request — Diginity Media*\n\n` +
+    `👤 *Name:* ${name}\n📞 *Phone:* ${phone}\n📧 *Email:* ${email}\n` +
+    `\n💼 *Services Selected:*\n${services}\n` +
+    `\n💰 *Estimated Total:* ₹${fmt(total)}/month\n` +
+    `📅 *Plan:* ${duration.charAt(0).toUpperCase()+duration.slice(1)}\n` +
+    (note ? `\n💬 *Notes:* ${note}` : '')
+  );
+
+  const waLink = `https://wa.me/918904724857?text=${msg}`;
+  document.getElementById('waLink').href = waLink;
+
+  document.getElementById('modalForm').style.display = 'none';
+  document.getElementById('modalSuccess').classList.add('show');
+  setTimeout(() => window.open(waLink, '_blank', 'noopener'), 1000);
+}
+
+function openWA() {
+  const { total } = updateSummary();
+  const services = Object.values(selected).map(v => v.name).join(', ');
+  const msg = encodeURIComponent(
+    `Hi Diginity Media! 👋\n\nI've selected a custom package:\n\n` +
+    `📦 *Services:* ${services}\n` +
+    `💰 *Estimate:* ₹${fmt(total)}/month (${duration} plan)\n\n` +
+    `Can you send me a detailed proposal?`
+  );
+  window.open(`https://wa.me/918904724857?text=${msg}`, '_blank', 'noopener');
+}
+
+/* ── UTILS ────────────────────────────────────────────────── */
+function fmt(n) { return n.toLocaleString('en-IN'); }
+
+/* ── INIT ─────────────────────────────────────────────────── */
+renderServices();
+updateSummary();
+</script>
+</body>
+</html>

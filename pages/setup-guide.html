@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diginity Media — Setup & Deployment Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Roboto+Mono:wght@400;500&display=swap">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#07090F;--surf:#0D1117;--surf2:#111820;
+  --bdr:#1E2A3A;--green:#3DFFA0;--blue:#4D8EFF;
+  --txt:#EEF2FF;--muted:#7A8BA0;
+  --red:#FF6B6B;--yellow:#FFD166;--purple:#9B59B6
+}
+body{background:var(--bg);color:var(--txt);font-family:'Roboto',sans-serif;font-size:15px;line-height:1.65}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+code,pre{font-family:'Roboto Mono',monospace}
+
+/* Layout */
+.wrap{max-width:860px;margin:0 auto;padding:0 24px}
+header{background:linear-gradient(135deg,rgba(61,255,160,.08),rgba(77,142,255,.08));border-bottom:1px solid var(--bdr);padding:32px 0}
+header .inner{display:flex;align-items:center;gap:16px}
+.logo-mark{width:44px;height:44px;background:linear-gradient(135deg,#3DFFA0,#4D8EFF);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#07090F;flex-shrink:0}
+header h1{font-size:22px;font-weight:800}
+header p{color:var(--muted);font-size:14px;margin-top:2px}
+
+/* Progress nav */
+.progress-nav{position:sticky;top:0;z-index:100;background:rgba(7,9,15,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--bdr);padding:12px 0;overflow-x:auto}
+.progress-nav ul{display:flex;gap:4px;list-style:none;white-space:nowrap;padding:0 24px}
+.progress-nav li a{font-size:12px;font-weight:600;color:var(--muted);padding:6px 12px;border-radius:8px;display:block;letter-spacing:.03em;transition:all .2s}
+.progress-nav li a:hover{color:var(--txt);background:var(--surf);text-decoration:none}
+.progress-nav li a.active{color:var(--bg);background:var(--green)}
+
+main{padding:48px 0 80px}
+
+/* Sections */
+.section{margin-bottom:56px}
+.section-header{display:flex;align-items:center;gap:14px;margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid var(--bdr)}
+.step-num{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--blue));display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#07090F;flex-shrink:0}
+.section-header h2{font-size:20px;font-weight:800}
+.section-header .badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.06em;margin-left:8px}
+.badge-free{background:rgba(61,255,160,.15);color:var(--green);border:1px solid rgba(61,255,160,.3)}
+.badge-paid{background:rgba(77,142,255,.15);color:var(--blue);border:1px solid rgba(77,142,255,.3)}
+.badge-optional{background:rgba(122,139,160,.12);color:var(--muted);border:1px solid var(--bdr)}
+
+/* Cards */
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:14px;padding:20px;margin-bottom:14px}
+.card-highlight{border-color:rgba(61,255,160,.3);background:rgba(61,255,160,.04)}
+.card h3{font-size:15px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.card p,.card li{font-size:14px;color:var(--muted);line-height:1.7}
+.card ul,.card ol{padding-left:20px}
+.card li{margin-bottom:4px}
+.card li strong{color:var(--txt)}
+
+/* Steps */
+.steps{counter-reset:step}
+.step-item{display:flex;gap:16px;margin-bottom:20px;position:relative}
+.step-item::before{content:'';position:absolute;left:17px;top:36px;bottom:-20px;width:1px;background:var(--bdr)}
+.step-item:last-child::before{display:none}
+.step-icon{width:36px;height:36px;border-radius:50%;background:var(--surf2);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;position:relative;z-index:1}
+.step-icon.done{background:rgba(61,255,160,.15);border-color:rgba(61,255,160,.4)}
+.step-body{flex:1;padding-top:5px}
+.step-body h4{font-size:14px;font-weight:700;margin-bottom:6px}
+.step-body p{font-size:13px;color:var(--muted);margin-bottom:8px}
+
+/* Code blocks */
+.code-block{background:#060810;border:1px solid var(--bdr);border-radius:10px;margin:12px 0;overflow:hidden}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--surf2);border-bottom:1px solid var(--bdr)}
+.code-header span{font-size:12px;color:var(--muted);font-weight:500}
+.copy-btn{font-size:11px;font-weight:600;color:var(--green);background:rgba(61,255,160,.1);border:1px solid rgba(61,255,160,.2);border-radius:6px;padding:3px 10px;cursor:pointer;transition:all .2s}
+.copy-btn:hover{background:rgba(61,255,160,.2)}
+.code-body{padding:16px;overflow-x:auto}
+.code-body pre{font-size:12.5px;line-height:1.7;color:#A8B8D0;white-space:pre}
+.code-body .cm{color:#4A5568}
+.code-body .ck{color:#4D8EFF}
+.code-body .cv{color:#3DFFA0}
+.code-body .cs{color:#FFD166}
+
+/* Table */
+.compare-table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0}
+.compare-table th{background:var(--surf2);padding:10px 14px;text-align:left;font-weight:700;font-size:12px;letter-spacing:.05em;color:var(--muted);border-bottom:1px solid var(--bdr)}
+.compare-table td{padding:10px 14px;border-bottom:1px solid rgba(30,42,58,.6);vertical-align:middle}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-table tr:hover td{background:rgba(255,255,255,.02)}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
+.tag-green{background:rgba(61,255,160,.15);color:var(--green)}
+.tag-blue{background:rgba(77,142,255,.15);color:var(--blue)}
+.tag-yellow{background:rgba(255,209,102,.12);color:var(--yellow)}
+.tag-red{background:rgba(255,107,107,.12);color:var(--red)}
+
+/* Checklist */
+.checklist{list-style:none;padding:0}
+.checklist li{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(30,42,58,.5);font-size:14px}
+.checklist li:last-child{border-bottom:none}
+.checklist li::before{content:'☐';font-size:16px;color:var(--muted);flex-shrink:0;margin-top:1px}
+.checklist li.done::before{content:'✅';color:var(--green)}
+.checklist li strong{color:var(--txt)}
+
+/* Alert boxes */
+.alert{border-radius:10px;padding:14px 16px;margin:14px 0;font-size:13px;display:flex;gap:10px;align-items:flex-start;line-height:1.6}
+.alert-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.alert-green{background:rgba(61,255,160,.07);border:1px solid rgba(61,255,160,.2)}
+.alert-blue{background:rgba(77,142,255,.07);border:1px solid rgba(77,142,255,.2)}
+.alert-yellow{background:rgba(255,209,102,.06);border:1px solid rgba(255,209,102,.2)}
+.alert-red{background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2)}
+
+/* CTA */
+.cta-box{background:linear-gradient(135deg,rgba(61,255,160,.08),rgba(77,142,255,.08));border:1px solid rgba(61,255,160,.2);border-radius:16px;padding:28px;text-align:center;margin-top:40px}
+.cta-box h3{font-size:20px;font-weight:800;margin-bottom:8px}
+.cta-box p{color:var(--muted);margin-bottom:20px;font-size:14px}
+.btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-block;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);text-decoration:none}
+.btn-g{background:var(--green);color:#07090F;box-shadow:0 6px 20px rgba(61,255,160,.25)}
+.btn-b{background:var(--blue);color:#fff;box-shadow:0 6px 20px rgba(77,142,255,.25)}
+.btn-outline{background:none;color:var(--txt);border:1px solid var(--bdr)}
+
+/* Two column */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.two-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="inner">
+      <div class="logo-mark">D</div>
+      <div>
+        <h1>Backend, Hosting & Domain Setup</h1>
+        <p>Complete production deployment guide for Diginity Media</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="progress-nav">
+  <ul>
+    <li><a href="#step1" class="active">1 · EmailJS</a></li>
+    <li><a href="#step2">2 · Netlify Deploy</a></li>
+    <li><a href="#step3">3 · Domain</a></li>
+    <li><a href="#step4">4 · Node Backend</a></li>
+    <li><a href="#step5">5 · Google Analytics</a></li>
+    <li><a href="#step6">6 · Search Console</a></li>
+    <li><a href="#step7">7 · WhatsApp Business</a></li>
+    <li><a href="#checklist">✅ Final Checklist</a></li>
+  </ul>
+</nav>
+
+<main>
+<div class="wrap">
+
+<!-- ══ STEP 1: EmailJS ══════════════════════════════════════════ -->
+<div class="section" id="step1">
+  <div class="section-header">
+    <div class="step-num">1</div>
+    <div>
+      <h2>EmailJS — Instant Email Alerts <span class="badge badge-free">FREE</span></h2>
+      <p style="color:var(--muted);font-size:13px;margin-top:3px">Get an email to your inbox the moment someone submits the contact form — no backend needed</p>
+    </div>
+  </div>
+
+  <div class="alert alert-green"><span class="alert-icon">💡</span><div>EmailJS lets your website send emails directly from the browser — no server required. Free plan: <strong>200 emails/month</strong>. That's 200 leads/month for free.</div></div>
+
+  <div class="step-item">
+    <div class="step-icon done">1</div>
+    <div class="step-body">
+      <h4>Create a free EmailJS account</h4>
+      <p>Go to <a href="https://www.emailjs.com" target="_blank">emailjs.com</a> → Sign up free → Verify your email</p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">2</div>
+    <div class="step-body">
+      <h4>Add an Email Service</h4>
+      <p>Dashboard → Email Services → Add New Service → Choose Gmail → Connect your Gmail account → Copy the <strong>Service ID</strong></p>
+      <div class="code-block">
+        <div class="code-header"><span>Example Service ID</span></div>
+        <div class="code-body"><pre><span class="cv">service_abc123</span>   ← copy this</pre></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">3</div>
+    <div class="step-body">
+      <h4>Create an Email Template</h4>
+      <p>Dashboard → Email Templates → Create New → paste this template:</p>
+      <div class="code-block">
+        <div class="code-header"><span>EmailJS Template (paste into Subject field)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-body"><pre>Subject: 🎯 New Lead from {{from_name}} — {{services}}
+
+New lead from Diginity Media website:
+
+Name:     {{from_name}}
+Phone:    {{phone}}
+Email:    {{from_email}}
+Company:  {{company}}
+Services: {{services}}
+Budget:   {{budget}}
+Source:   {{source}}
+Message:  {{message}}
+Time:     {{timestamp}}
+
+Reply to: {{reply_to}}</pre></div>
+      </div>
+      <p style="margin-top:8px">Copy the <strong>Template ID</strong> (e.g. <code style="color:var(--green)">template_xyz789</code>)</p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">4</div>
+    <div class="step-body">
+      <h4>Get your Public Key</h4>
+      <p>Dashboard → Account → General → Public Key → copy it</p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">5</div>
+    <div class="step-body">
+      <h4>Add keys to index.html</h4>
+      <p>Open <code>index.html</code> → Ctrl+F for <code>YOUR_EMAILJS_PUBLIC_KEY</code> → replace all 3 values:</p>
+      <div class="code-block">
+        <div class="code-header"><span>index.html — find and replace these 3 values</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-body"><pre><span class="cm">// Line 1 — in the &lt;head&gt; script:</span>
+emailjs.init(<span class="cs">"YOUR_EMAILJS_PUBLIC_KEY"</span>);
+<span class="cm">// Replace with:</span>
+emailjs.init(<span class="cv">"user_AbCdEfGhIjKlMnOp"</span>);
+
+<span class="cm">// Line 2 — in the submitForm function:</span>
+emailjs.send(<span class="cs">'YOUR_SERVICE_ID'</span>, <span class="cs">'YOUR_TEMPLATE_ID'</span>, ...
+<span class="cm">// Replace with:</span>
+emailjs.send(<span class="cv">'service_abc123'</span>, <span class="cv">'template_xyz789'</span>, ...</pre></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-blue"><span class="alert-icon">✅</span><div><strong>Test it:</strong> Submit the contact form on your site → check your Gmail inbox within 10 seconds. If it arrives, EmailJS is working.</div></div>
+</div>
+
+<!-- ══ STEP 2: Netlify Deploy ════════════════════════════════════ -->
+<div class="section" id="step2">
+  <div class="section-header">
+    <div class="step-num">2</div>
+    <div>
+      <h2>Deploy to Netlify <span class="badge badge-free">FREE</span></h2>
+      <p style="color:var(--muted);font-size:13px;margin-top:3px">Get a live URL in 60 seconds — HTTPS, CDN, and Netlify Forms all included</p>
+    </div>
+  </div>
+
+  <div class="alert alert-green"><span class="alert-icon">🚀</span><div>Netlify's free tier is <strong>unlimited bandwidth</strong> for static sites. It also handles your contact form submissions and stores them in a dashboard — no backend needed.</div></div>
+
+  <div class="step-item">
+    <div class="step-icon done">1</div>
+    <div class="step-body">
+      <h4>Prepare your folder</h4>
+      <p>Make sure all files are in one folder. Rename the main file to <code>index.html</code></p>
+      <div class="code-block">
+        <div class="code-header"><span>Your folder structure</span></div>
+        <div class="code-body"><pre>diginity-media/
+├── <span class="cv">index.html</span>              ← main website (renamed)
+├── netlify.toml            ← deployment config
+├── sitemap.xml
+├── robots.txt
+├── manifest.json
+├── diginity-media-logo.svg
+├── diginity-case-studies.html
+├── diginity-pricing-calculator.html
+├── diginity-lead-dashboard.html
+├── diginity-blog-*.html    ← all blog files
+├── diginity-404.html
+├── diginity-privacy-policy.html
+└── diginity-terms.html</pre></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">2</div>
+    <div class="step-body">
+      <h4>Go to netlify.com and sign up</h4>
+      <p>Sign up free with Google → you'll see a dashboard with a big drag-and-drop zone</p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">3</div>
+    <div class="step-body">
+      <h4>Drag & drop your folder</h4>
+      <p>Drag the entire <code>diginity-media/</code> folder into the Netlify drop zone → it deploys in ~20 seconds → you get a URL like <code style="color:var(--green)">amazing-einstein-a1b2c3.netlify.app</code></p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">4</div>
+    <div class="step-body">
+      <h4>Enable Netlify Forms (to receive leads in dashboard)</h4>
+      <p>Site → Settings → Forms → Enable form detection → Your contact form submissions now appear in <strong>Site → Forms → diginity-leads</strong></p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">5</div>
+    <div class="step-body">
+      <h4>Set up form email notifications</h4>
+      <p>Site → Forms → diginity-leads → Notifications → Add notification → Email → enter your email → Save<br>
+      <span style="color:var(--green);font-size:13px">Now you get an email every time someone submits the form ✅</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ STEP 3: Domain ════════════════════════════════════════════ -->
+<div class="section" id="step3">
+  <div class="section-header">
+    <div class="step-num">3</div>
+    <div>
+      <h2>Connect Your Domain <span class="badge badge-paid">~₹800/yr</span></h2>
+      <p style="color:var(--muted);font-size:13px;margin-top:3px">Point diginity.in to your Netlify site</p>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-bottom:20px">
+    <div class="card card-highlight">
+      <h3>🏆 Recommended</h3>
+      <p><strong style="color:var(--green)">GoDaddy India</strong><br>diginity.in ≈ ₹799/year<br><a href="https://in.godaddy.com" target="_blank">in.godaddy.com</a></p>
+    </div>
+    <div class="card">
+      <h3>💰 Cheapest</h3>
+      <p><strong style="color:var(--blue)">Namecheap</strong><br>.in domains ≈ ₹650/year<br><a href="https://namecheap.com" target="_blank">namecheap.com</a></p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">1</div>
+    <div class="step-body">
+      <h4>Buy diginity.in (or diginity.media / diginity.co)</h4>
+      <p>Go to GoDaddy India → search "diginity.in" → add to cart → checkout → ~₹799 first year</p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">2</div>
+    <div class="step-body">
+      <h4>Add domain in Netlify</h4>
+      <p>Netlify → Your site → Domain management → Add a domain → type <code>diginity.in</code> → Verify</p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">3</div>
+    <div class="step-body">
+      <h4>Update DNS records in GoDaddy</h4>
+      <p>Netlify will show you 4 nameservers. Copy them, then go to GoDaddy → Domains → diginity.in → DNS → Nameservers → Change → Enter Custom → paste all 4 nameservers:</p>
+      <div class="code-block">
+        <div class="code-header"><span>Paste these into GoDaddy Nameservers (Netlify gives you these)</span></div>
+        <div class="code-body"><pre><span class="cv">dns1.p04.nsone.net</span>
+<span class="cv">dns2.p04.nsone.net</span>
+<span class="cv">dns3.p04.nsone.net</span>
+<span class="cv">dns4.p04.nsone.net</span>
+<span class="cm">↑ Your actual nameservers will be slightly different — copy from Netlify</span></pre></div>
+      </div>
+      <p style="color:var(--muted);font-size:13px;margin-top:8px">DNS propagation takes 10 minutes to 48 hours. Usually it's 30 minutes.</p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">4</div>
+    <div class="step-body">
+      <h4>Enable HTTPS (free, automatic)</h4>
+      <p>Netlify → Domain management → HTTPS → Verify DNS → Enable HTTPS → Done. Your site is now <code style="color:var(--green)">https://diginity.in</code> with a padlock 🔒</p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">5</div>
+    <div class="step-body">
+      <h4>Set up professional email (optional but recommended)</h4>
+      <p>GoDaddy → Products → Email → Google Workspace → ₹125/month → get <code style="color:var(--green)">diginitymedia@gmail.com</code><br>
+      OR cheaper: <a href="https://zoho.com/mail" target="_blank">Zoho Mail</a> → free for 5 users → get <code style="color:var(--green)">diginitymedia@gmail.com</code></p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ STEP 4: Node.js Backend (Advanced) ═══════════════════════ -->
+<div class="section" id="step4">
+  <div class="section-header">
+    <div class="step-num">4</div>
+    <div>
+      <h2>Node.js Backend <span class="badge badge-optional">OPTIONAL — Advanced</span></h2>
+      <p style="color:var(--muted);font-size:13px;margin-top:3px">For persistent lead storage, CRM integration, and custom APIs — deploy free on Railway</p>
+    </div>
+  </div>
+
+  <div class="alert alert-yellow"><span class="alert-icon">⚠️</span><div><strong>Do Netlify Forms + EmailJS first.</strong> This backend is only needed if you want to store 1000s of leads in a database, build a CRM, or connect APIs. Skip for now if you're just getting started.</div></div>
+
+  <div class="step-item">
+    <div class="step-icon">1</div>
+    <div class="step-body">
+      <h4>Install Node.js on your computer</h4>
+      <p>Download from <a href="https://nodejs.org" target="_blank">nodejs.org</a> → LTS version → install</p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">2</div>
+    <div class="step-body">
+      <h4>Set up the backend folder</h4>
+      <div class="code-block">
+        <div class="code-header"><span>Terminal commands</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-body"><pre><span class="cm"># Navigate to your project</span>
+cd diginity-media/backend
+
+<span class="cm"># Install dependencies</span>
+npm install
+
+<span class="cm"># Copy environment file</span>
+cp .env.example .env
+
+<span class="cm"># Edit .env with your real values (Gmail, WhatsApp number)</span>
+<span class="cm"># Then start the server</span>
+npm start
+
+<span class="cm"># Visit http://localhost:3000/api/health</span>
+<span class="cm"># You should see: {"ok":true}</span></pre></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">3</div>
+    <div class="step-body">
+      <h4>Configure Gmail App Password</h4>
+      <p>Regular Gmail password won't work. You need an App Password:</p>
+      <ol style="font-size:13px;color:var(--muted);line-height:2;padding-left:18px">
+        <li>Go to <a href="https://myaccount.google.com/security" target="_blank">myaccount.google.com/security</a></li>
+        <li>Enable <strong style="color:var(--txt)">2-Step Verification</strong> (required)</li>
+        <li>Search "App Passwords" → Create → name it "Diginity Backend"</li>
+        <li>Copy the 16-character password → paste into <code>.env</code> as <code>SMTP_PASS</code></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">4</div>
+    <div class="step-body">
+      <h4>Deploy to Railway (free)</h4>
+      <div class="code-block">
+        <div class="code-header"><span>Deploy steps</span></div>
+        <div class="code-body"><pre><span class="cm"># 1. Push backend to GitHub</span>
+cd backend
+git init
+git add .
+git commit -m "Diginity Media backend"
+git remote add origin https://github.com/yourusername/diginity-backend.git
+git push -u origin main
+
+<span class="cm"># 2. Go to railway.app → New Project → Deploy from GitHub</span>
+<span class="cm"># 3. Select your repo → Railway auto-detects Node.js</span>
+<span class="cm"># 4. Add environment variables in Railway dashboard</span>
+<span class="cm"># 5. Railway gives you a URL: diginity-backend.up.railway.app</span></pre></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">5</div>
+    <div class="step-body">
+      <h4>Connect frontend to your backend URL</h4>
+      <p>In <code>index.html</code>, Ctrl+F for <code>BACKEND_URL</code> → replace with your Railway URL:</p>
+      <div class="code-block">
+        <div class="code-header"><span>index.html</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-body"><pre><span class="cm">// Find this in the form submit handler:</span>
+<span class="ck">const</span> <span class="cv">BACKEND</span> = <span class="cs">'https://diginity-backend.up.railway.app'</span>;
+
+<span class="cm">// Then the fetch call sends to:</span>
+fetch(<span class="cv">BACKEND</span> + <span class="cs">'/api/contact'</span>, { method:<span class="cs">'POST'</span>, ... })</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ STEP 5: Google Analytics ══════════════════════════════════ -->
+<div class="section" id="step5">
+  <div class="section-header">
+    <div class="step-num">5</div>
+    <div>
+      <h2>Google Analytics 4 <span class="badge badge-free">FREE</span></h2>
+      <p style="color:var(--muted);font-size:13px;margin-top:3px">See exactly who visits your site, which pages convert, and where traffic comes from</p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">1</div>
+    <div class="step-body">
+      <h4>Create a GA4 property</h4>
+      <p>Go to <a href="https://analytics.google.com" target="_blank">analytics.google.com</a> → Admin → Create Property → name: "Diginity Media" → India → INR → Business website → Create</p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">2</div>
+    <div class="step-body">
+      <h4>Get your Measurement ID</h4>
+      <p>Property → Data Streams → Add stream → Web → enter <code>https://diginity.in</code> → Copy <strong>Measurement ID</strong> (starts with <code style="color:var(--green)">G-</code>)</p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">3</div>
+    <div class="step-body">
+      <h4>Add to index.html</h4>
+      <p>Ctrl+F for <code>G-REPLACE-WITH-YOUR-GA4-ID</code> → replace with your actual ID in both places:</p>
+      <div class="code-block">
+        <div class="code-header"><span>Find & replace in index.html</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-body"><pre><span class="cm">// Before:</span>
+<span class="cs">'G-REPLACE-WITH-YOUR-GA4-ID'</span>
+
+<span class="cm">// After (your real ID):</span>
+<span class="cv">'G-AB12CD34EF'</span></pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ STEP 6: Search Console ════════════════════════════════════ -->
+<div class="section" id="step6">
+  <div class="section-header">
+    <div class="step-num">6</div>
+    <div>
+      <h2>Google Search Console <span class="badge badge-free">FREE</span></h2>
+      <p style="color:var(--muted);font-size:13px;margin-top:3px">Tell Google your site exists — required for SEO ranking</p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">1</div>
+    <div class="step-body">
+      <h4>Add your property</h4>
+      <p>Go to <a href="https://search.google.com/search-console" target="_blank">search.google.com/search-console</a> → Add property → URL prefix → enter <code>https://diginity.in</code></p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">2</div>
+    <div class="step-body">
+      <h4>Verify ownership (HTML tag method)</h4>
+      <p>Choose "HTML tag" → copy the meta tag → paste it into <code>index.html</code> inside <code>&lt;head&gt;</code> → redeploy to Netlify → click Verify</p>
+      <div class="code-block">
+        <div class="code-header"><span>Paste this in &lt;head&gt; of index.html</span></div>
+        <div class="code-body"><pre><span class="ck">&lt;meta</span> <span class="cv">name</span>=<span class="cs">"google-site-verification"</span> <span class="cv">content</span>=<span class="cs">"YOUR_CODE_HERE"</span><span class="ck">/&gt;</span></pre></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">3</div>
+    <div class="step-body">
+      <h4>Submit sitemap</h4>
+      <p>Search Console → Sitemaps → enter <code>sitemap.xml</code> → Submit<br>
+      <span style="color:var(--green);font-size:13px">Google will now crawl and index all your pages ✅</span></p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">4</div>
+    <div class="step-body">
+      <h4>Request indexing for your homepage</h4>
+      <p>URL Inspection → enter <code>https://diginity.in</code> → Request Indexing → Google will index it within hours</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ STEP 7: WhatsApp Business ════════════════════════════════ -->
+<div class="section" id="step7">
+  <div class="section-header">
+    <div class="step-num">7</div>
+    <div>
+      <h2>WhatsApp Business Setup <span class="badge badge-free">FREE</span></h2>
+      <p style="color:var(--muted);font-size:13px;margin-top:3px">Set up your WhatsApp Business profile so leads get a professional experience</p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">1</div>
+    <div class="step-body">
+      <h4>Download WhatsApp Business app</h4>
+      <p>Play Store / App Store → search "WhatsApp Business" → install → register with your business phone number</p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">2</div>
+    <div class="step-body">
+      <h4>Set up your Business Profile</h4>
+      <p>Settings → Business Profile → fill in:<br>
+      Business name: <strong>Diginity Media</strong><br>
+      Category: Advertising & Marketing<br>
+      Description: Premium Digital Marketing Agency in Bangalore<br>
+      Website: https://diginity.in<br>
+      Email: diginitymedia@gmail.com</p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">3</div>
+    <div class="step-body">
+      <h4>Set up Quick Replies & Greeting Message</h4>
+      <p>Business Tools → Greeting message: <em>"Hi! Thanks for reaching out to Diginity Media. We'll respond within 2 hours. For immediate help, call +91 89047 24857."</em></p>
+    </div>
+  </div>
+
+  <div class="step-item">
+    <div class="step-icon">4</div>
+    <div class="step-body">
+      <h4>Update your phone number in index.html</h4>
+      <p>Ctrl+F for <code>918904724857</code> → replace with your real number (no + or spaces):</p>
+      <div class="code-block">
+        <div class="code-header"><span>Replace everywhere in index.html</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-body"><pre><span class="cm">// Before:</span>
+<span class="cs">'918904724857'</span>
+
+<span class="cm">// After (example — use your real number):</span>
+<span class="cv">'919876543210'</span>
+
+<span class="cm">// Also replace display number:</span>
+<span class="cs">'+91 89047 24857'</span>  →  <span class="cv">'+91 98765 43210'</span></pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HOSTING COMPARISON ═══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="step-num" style="background:var(--blue);color:#fff">⚡</div>
+    <h2>Hosting Options Comparison</h2>
+  </div>
+  <table class="compare-table">
+    <thead>
+      <tr><th>Platform</th><th>Cost</th><th>Speed</th><th>Features</th><th>Best For</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Netlify</strong> 🏆</td>
+        <td><span class="tag tag-green">Free</span></td>
+        <td><span class="tag tag-green">Fast CDN</span></td>
+        <td>Forms, HTTPS, redirects, analytics</td>
+        <td>Static sites — <strong>use this</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Vercel</strong></td>
+        <td><span class="tag tag-green">Free</span></td>
+        <td><span class="tag tag-green">Fastest</span></td>
+        <td>Edge network, serverless functions</td>
+        <td>If you migrate to Next.js</td>
+      </tr>
+      <tr>
+        <td><strong>GitHub Pages</strong></td>
+        <td><span class="tag tag-green">Free</span></td>
+        <td><span class="tag tag-yellow">Medium</span></td>
+        <td>Basic hosting, no forms</td>
+        <td>Developers only</td>
+      </tr>
+      <tr>
+        <td><strong>Hostinger</strong></td>
+        <td><span class="tag tag-yellow">₹69/mo</span></td>
+        <td><span class="tag tag-yellow">Medium</span></td>
+        <td>cPanel, email, databases, PHP</td>
+        <td>When you need professional email</td>
+      </tr>
+      <tr>
+        <td><strong>DigitalOcean</strong></td>
+        <td><span class="tag tag-blue">₹400/mo</span></td>
+        <td><span class="tag tag-green">Fast</span></td>
+        <td>Full server, Node.js, databases</td>
+        <td>When you have a Node backend</td>
+      </tr>
+      <tr>
+        <td><strong>Railway</strong></td>
+        <td><span class="tag tag-green">Free tier</span></td>
+        <td><span class="tag tag-yellow">Medium</span></td>
+        <td>Node.js, databases, auto-deploy</td>
+        <td>Node.js backend only</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ FINAL CHECKLIST ═══════════════════════════════════════════ -->
+<div class="section" id="checklist">
+  <div class="section-header">
+    <div class="step-num" style="background:linear-gradient(135deg,#3DFFA0,#4D8EFF)">✅</div>
+    <h2>Pre-Launch Final Checklist</h2>
+  </div>
+  <div class="card" style="padding:24px">
+    <ul class="checklist">
+      <li><div><strong>Replace phone number</strong> — Ctrl+F → <code>918904724857</code> → your number</div></li>
+      <li><div><strong>Replace email</strong> — Ctrl+F → <code>diginitymedia@gmail.com</code> → your email</div></li>
+      <li><div><strong>Replace founder name</strong> — Ctrl+F → <code>Arjun Kumar</code> → your name</div></li>
+      <li><div><strong>Add EmailJS keys</strong> — service ID, template ID, public key (Step 1)</div></li>
+      <li><div><strong>Add GA4 Measurement ID</strong> — Ctrl+F → <code>G-REPLACE-WITH-YOUR-GA4-ID</code></div></li>
+      <li><div><strong>Rename file</strong> — <code>../index.html</code> → <code>index.html</code></div></li>
+      <li><div><strong>Deploy to Netlify</strong> — drag & drop folder → get live URL (Step 2)</div></li>
+      <li><div><strong>Buy domain</strong> — diginity.in from GoDaddy (Step 3)</div></li>
+      <li><div><strong>Connect domain to Netlify</strong> — update nameservers (Step 3)</div></li>
+      <li><div><strong>Enable HTTPS</strong> — Netlify → Domain management → Enable HTTPS</div></li>
+      <li><div><strong>Enable Netlify Forms notifications</strong> — get email on every lead</div></li>
+      <li><div><strong>Set up WhatsApp Business profile</strong> (Step 7)</div></li>
+      <li><div><strong>Submit sitemap to Google Search Console</strong> (Step 6)</div></li>
+      <li><div><strong>Request indexing</strong> for homepage in Search Console</div></li>
+      <li><div><strong>Create Google Business Profile</strong> at business.google.com</div></li>
+      <li><div><strong>Test contact form</strong> — submit a test lead and verify WhatsApp + email</div></li>
+      <li><div><strong>Test on mobile</strong> — open site on your phone, check all nav and pages</div></li>
+      <li><div><strong>Test PageSpeed</strong> — pagespeed.web.dev → aim for 85+ score</div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══ CTA ═══════════════════════════════════════════════════════ -->
+<div class="cta-box">
+  <h3>Stuck on any step?</h3>
+  <p>Share your screen and we can walk through the setup together</p>
+  <div class="btn-row">
+    <a href="https://wa.me/918904724857" class="btn btn-g" target="_blank">💬 WhatsApp Support</a>
+    <a href="mailto:diginitymedia@gmail.com" class="btn btn-b">📧 Email Support</a>
+  </div>
+</div>
+
+</div>
+</main>
+
+<script>
+// Copy button functionality
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✅ Copied!';
+    btn.style.color = 'var(--green)';
+    setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 2000);
+  });
+}
+
+// Active nav highlight on scroll
+const sections = document.querySelectorAll('.section[id]');
+const navLinks = document.querySelectorAll('.progress-nav a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+  navLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+}, { passive: true });
+</script>
+
+</body>
+</html>

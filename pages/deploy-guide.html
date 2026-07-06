@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deploy Guide — Diginity Media</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090F;--surf:#0D1117;--surf2:#111820;
+  --bdr:#1E2A3A;--green:#3DFFA0;--blue:#4D8EFF;
+  --txt:#EEF2FF;--muted:#7A8BA0;--red:#FF6B6B;--yellow:#FFD166;
+  --grad:linear-gradient(135deg,#3DFFA0,#4D8EFF)
+}
+body{background:var(--bg);color:var(--txt);font-family:'Roboto',sans-serif;line-height:1.65;font-size:15px}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:'Roboto Mono',monospace;font-size:13px;background:rgba(255,255,255,.07);padding:2px 7px;border-radius:5px;color:#A8C0D6}
+
+/* Nav */
+nav{position:sticky;top:0;background:rgba(7,9,15,.96);border-bottom:1px solid var(--bdr);backdrop-filter:blur(16px);z-index:100;padding:0 24px}
+.nav-in{max-width:860px;margin:0 auto;height:58px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-weight:800;font-size:17px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-back{font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-back:hover{color:var(--green)}
+
+/* Layout */
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+header{padding:52px 0 40px;border-bottom:1px solid var(--bdr)}
+header .tag{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--green);text-transform:uppercase;display:block;margin-bottom:12px}
+header h1{font-size:clamp(26px,4vw,40px);font-weight:900;line-height:1.1;margin-bottom:10px}
+header p{color:var(--muted);font-size:15px;max-width:580px}
+
+/* Progress tracker */
+.tracker{display:flex;gap:0;margin:36px 0 0;overflow-x:auto;padding-bottom:4px}
+.track-step{display:flex;align-items:center;gap:0;flex-shrink:0}
+.track-dot{width:32px;height:32px;border-radius:50%;background:var(--surf2);border:2px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s;flex-shrink:0}
+.track-dot.done{background:rgba(61,255,160,.2);border-color:var(--green);color:var(--green)}
+.track-dot.active{background:var(--green);border-color:var(--green);color:#07090F}
+.track-line{width:40px;height:2px;background:var(--bdr);flex-shrink:0}
+.track-line.done{background:var(--green)}
+.track-label{font-size:10px;color:var(--muted);text-align:center;margin-top:5px;white-space:nowrap}
+
+main{padding:0 0 80px}
+
+/* Phase headers */
+.phase{margin:48px 0 0}
+.phase-label{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.phase-label::after{content:'';flex:1;height:1px;background:var(--bdr)}
+
+/* Step cards */
+.step{background:var(--surf);border:1px solid var(--bdr);border-radius:16px;margin-bottom:14px;overflow:hidden;transition:border-color .2s}
+.step.completed{border-color:rgba(61,255,160,.3)}
+.step-head{display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+.step-num{width:34px;height:34px;border-radius:50%;background:var(--surf2);border:2px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--muted);flex-shrink:0;transition:all .2s}
+.step.completed .step-num{background:rgba(61,255,160,.15);border-color:var(--green);color:var(--green)}
+.step-title{font-weight:700;font-size:15px;flex:1}
+.step-subtitle{font-size:12px;color:var(--muted)}
+.step-check{font-size:18px;transition:transform .2s}
+.step-body{padding:0 20px 20px 20px;display:none}
+.step.open .step-body{display:block}
+.step.open .step-head{border-bottom:1px solid var(--bdr);padding-bottom:14px;margin-bottom:16px}
+
+/* Content inside steps */
+.sub{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:14px}
+.instruction{display:flex;gap:12px;margin-bottom:14px;font-size:14px}
+.instruction .n{background:var(--green);color:#07090F;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;margin-top:1px}
+.instruction .txt{color:var(--muted);flex:1;line-height:1.7}
+.instruction .txt strong{color:var(--txt)}
+
+/* Code blocks */
+.cb{background:#060810;border:1px solid var(--bdr);border-radius:10px;margin:12px 0;overflow:hidden}
+.cb-head{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--surf2);border-bottom:1px solid var(--bdr)}
+.cb-head span{font-size:11px;color:var(--muted);font-weight:600}
+.cb-copy{font-size:11px;font-weight:700;color:var(--green);background:rgba(61,255,160,.1);border:1px solid rgba(61,255,160,.2);border-radius:6px;padding:3px 10px;cursor:pointer;transition:background .2s}
+.cb-copy:hover{background:rgba(61,255,160,.2)}
+.cb-body{padding:14px 16px;overflow-x:auto}
+.cb-body pre{font-family:'Roboto Mono',monospace;font-size:12.5px;line-height:1.75;color:#A8C0D6;white-space:pre}
+.cm{color:#3A4A5C}
+.ck{color:var(--blue)}
+.cv{color:var(--green)}
+.cs{color:#FFD166}
+
+/* Alerts */
+.alert{border-radius:10px;padding:13px 16px;margin:14px 0;font-size:13px;display:flex;gap:10px;line-height:1.6}
+.alert-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.ag{background:rgba(61,255,160,.07);border:1px solid rgba(61,255,160,.2)}
+.ab{background:rgba(77,142,255,.07);border:1px solid rgba(77,142,255,.2)}
+.ay{background:rgba(255,209,102,.06);border:1px solid rgba(255,209,102,.2)}
+
+/* Done button */
+.btn-done{display:block;width:100%;margin-top:16px;padding:13px;border-radius:10px;border:none;background:linear-gradient(135deg,#3DFFA0,#4D8EFF);color:#07090F;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s}
+.btn-done:hover{opacity:.9}
+
+/* External link button */
+.btn-ext{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:10px;border:1px solid var(--bdr);background:var(--surf2);color:var(--txt);font-size:13px;font-weight:600;text-decoration:none;margin-top:10px;transition:border-color .2s,background .2s}
+.btn-ext:hover{border-color:var(--green);background:rgba(61,255,160,.05);text-decoration:none;color:var(--txt)}
+
+/* Summary box */
+.summary{background:linear-gradient(135deg,rgba(61,255,160,.08),rgba(77,142,255,.08));border:1px solid rgba(61,255,160,.2);border-radius:16px;padding:28px;margin:40px 0;display:none}
+.summary h3{font-size:20px;font-weight:800;margin-bottom:8px}
+.summary p{color:var(--muted);font-size:14px;margin-bottom:20px}
+.url-box{background:var(--surf);border:1px solid var(--green);border-radius:10px;padding:14px 18px;font-family:'Roboto Mono',monospace;font-size:15px;color:var(--green);word-break:break-all;margin:12px 0}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap}
+.btn-g{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:10px;background:var(--green);color:#07090F;font-size:13px;font-weight:700;text-decoration:none;transition:opacity .2s}
+.btn-g:hover{opacity:.9;text-decoration:none;color:#07090F}
+
+/* Screenshot hints */
+.img-hint{background:var(--surf2);border:2px dashed var(--bdr);border-radius:10px;padding:20px;text-align:center;font-size:13px;color:var(--muted);margin:12px 0}
+.img-hint strong{display:block;font-size:12px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+
+footer{text-align:center;padding:24px;border-top:1px solid var(--bdr);font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<nav><div class="nav-in">
+  <span class="logo">Diginity Media</span>
+  <a href="../index.html" class="nav-back">← Back to Site</a>
+</div></nav>
+
+<header><div class="wrap">
+  <span class="tag">Deployment Guide</span>
+  <h1>GitHub + Netlify<br>Step-by-step</h1>
+  <p>Your site goes live with HTTPS and a free subdomain. Every future code change auto-deploys in under 30 seconds.</p>
+
+  <div class="tracker" id="tracker">
+    <div class="track-step">
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <div class="track-dot active" onclick="jumpTo(0)">1</div>
+        <div class="track-label">GitHub<br>Account</div>
+      </div>
+    </div>
+    <div class="track-line" id="tl0"></div>
+    <div class="track-step">
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <div class="track-dot" id="td1" onclick="jumpTo(1)">2</div>
+        <div class="track-label">Create<br>Repo</div>
+      </div>
+    </div>
+    <div class="track-line" id="tl1"></div>
+    <div class="track-step">
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <div class="track-dot" id="td2" onclick="jumpTo(2)">3</div>
+        <div class="track-label">Upload<br>Files</div>
+      </div>
+    </div>
+    <div class="track-line" id="tl2"></div>
+    <div class="track-step">
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <div class="track-dot" id="td3" onclick="jumpTo(3)">4</div>
+        <div class="track-label">Netlify<br>Account</div>
+      </div>
+    </div>
+    <div class="track-line" id="tl3"></div>
+    <div class="track-step">
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <div class="track-dot" id="td4" onclick="jumpTo(4)">5</div>
+        <div class="track-label">Connect<br>Repo</div>
+      </div>
+    </div>
+    <div class="track-line" id="tl4"></div>
+    <div class="track-step">
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <div class="track-dot" id="td5" onclick="jumpTo(5)">6</div>
+        <div class="track-label">Deploy<br>Settings</div>
+      </div>
+    </div>
+    <div class="track-line" id="tl5"></div>
+    <div class="track-step">
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <div class="track-dot" id="td6" onclick="jumpTo(6)">7</div>
+        <div class="track-label">Name &<br>Go Live</div>
+      </div>
+    </div>
+    <div class="track-line" id="tl6"></div>
+    <div class="track-step">
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <div class="track-dot" id="td7" onclick="jumpTo(7)">8</div>
+        <div class="track-label">After<br>Deploy</div>
+      </div>
+    </div>
+  </div>
+</div></header>
+
+<main><div class="wrap">
+
+<!-- ═══ PHASE 1: GITHUB ═══════════════════════════════════ -->
+<div class="phase"><div class="phase-label">Phase 1 — GitHub (store your code)</div>
+
+<!-- Step 1 -->
+<div class="step open" id="step-0">
+  <div class="step-head" onclick="toggleStep(0)">
+    <div class="step-num">1</div>
+    <div style="flex:1">
+      <div class="step-title">Create a GitHub account</div>
+      <div class="step-subtitle">Free · 2 minutes · skip if you already have one</div>
+    </div>
+    <span class="step-check">▾</span>
+  </div>
+  <div class="step-body">
+    <p class="sub">GitHub is where your code lives. Netlify watches it and auto-deploys whenever you push a change.</p>
+    <div class="instruction"><div class="n">1</div><div class="txt">Go to <a href="https://github.com/signup" target="_blank" rel="noopener"><strong>github.com/signup</strong></a></div></div>
+    <div class="instruction"><div class="n">2</div><div class="txt">Enter your email, create a password, choose a username (e.g. <strong>diginitymedia</strong>)</div></div>
+    <div class="instruction"><div class="n">3</div><div class="txt">Verify your email → choose the <strong>Free plan</strong></div></div>
+    <a href="https://github.com/signup" target="_blank" rel="noopener" class="btn-ext">🐙 Open GitHub Signup →</a>
+    <button class="btn-done" onclick="markDone(0)">✅ Done — I have a GitHub account</button>
+  </div>
+</div>
+
+<!-- Step 2 -->
+<div class="step" id="step-1">
+  <div class="step-head" onclick="toggleStep(1)">
+    <div class="step-num">2</div>
+    <div style="flex:1">
+      <div class="step-title">Create a new repository</div>
+      <div class="step-subtitle">This is the folder on GitHub that holds your site</div>
+    </div>
+    <span class="step-check">▾</span>
+  </div>
+  <div class="step-body">
+    <div class="instruction"><div class="n">1</div><div class="txt">Once logged in, click the <strong>+</strong> icon in the top-right → <strong>New repository</strong></div></div>
+    <div class="instruction"><div class="n">2</div><div class="txt">Repository name: <code>diginity-media</code></div></div>
+    <div class="instruction"><div class="n">3</div><div class="txt">Set to <strong>Public</strong> (Netlify's free tier works with public repos)</div></div>
+    <div class="instruction"><div class="n">4</div><div class="txt">Leave everything else unchecked → click <strong>Create repository</strong></div></div>
+    <div class="img-hint"><strong>What you'll see</strong>You'll land on an empty repo page with a URL like:<br><code>https://github.com/YOUR-USERNAME/diginity-media</code></div>
+    <a href="https://github.com/new" target="_blank" rel="noopener" class="btn-ext">🐙 Create New Repository →</a>
+    <button class="btn-done" onclick="markDone(1)">✅ Done — Repository created</button>
+  </div>
+</div>
+
+<!-- Step 3 -->
+<div class="step" id="step-2">
+  <div class="step-head" onclick="toggleStep(2)">
+    <div class="step-num">3</div>
+    <div style="flex:1">
+      <div class="step-title">Upload your project files</div>
+      <div class="step-subtitle">No terminal needed — drag and drop in the browser</div>
+    </div>
+    <span class="step-check">▾</span>
+  </div>
+  <div class="step-body">
+    <div class="alert ag"><span class="alert-icon">📦</span><div>First, <strong>unzip diginity-media.zip</strong> on your computer. You'll get a folder called <code>diginity-media/</code> containing <code>index.html</code>, <code>pages/</code>, <code>assets/</code>, and the other files.</div></div>
+    <div class="instruction"><div class="n">1</div><div class="txt">On your empty GitHub repo page, click <strong>"uploading an existing file"</strong> (the link in the middle of the page)</div></div>
+    <div class="instruction"><div class="n">2</div><div class="txt">Open the unzipped <code>diginity-media/</code> folder on your computer, <strong>select all files inside it</strong> (Ctrl+A / Cmd+A), and drag them into the GitHub upload box</div></div>
+    <div class="instruction"><div class="n">3</div><div class="txt"><strong>Important:</strong> drag the <em>contents</em> of the folder, not the folder itself. Your repo root should have <code>index.html</code> at the top level, not a <code>diginity-media/</code> subfolder</div></div>
+    <div class="instruction"><div class="n">4</div><div class="txt">Wait for all files to finish uploading (you'll see a list of green checkmarks)</div></div>
+    <div class="instruction"><div class="n">5</div><div class="txt">Scroll down, leave the commit message as-is → click <strong>Commit changes</strong></div></div>
+    <div class="alert ab"><span class="alert-icon">💡</span><div><strong>Tip:</strong> GitHub may struggle with many files at once. If the upload gets stuck, try uploading in 2 batches — first <code>index.html</code> + root files, then the <code>pages/</code> and <code>assets/</code> folders.</div></div>
+    <button class="btn-done" onclick="markDone(2)">✅ Done — Files are on GitHub</button>
+  </div>
+</div>
+</div>
+
+<!-- ═══ PHASE 2: NETLIFY ══════════════════════════════════ -->
+<div class="phase"><div class="phase-label">Phase 2 — Netlify (host & auto-deploy)</div>
+
+<!-- Step 4 -->
+<div class="step" id="step-3">
+  <div class="step-head" onclick="toggleStep(3)">
+    <div class="step-num">4</div>
+    <div style="flex:1">
+      <div class="step-title">Create a free Netlify account</div>
+      <div class="step-subtitle">Sign in with GitHub — 1 click, no form to fill</div>
+    </div>
+    <span class="step-check">▾</span>
+  </div>
+  <div class="step-body">
+    <div class="instruction"><div class="n">1</div><div class="txt">Go to <a href="https://app.netlify.com/signup" target="_blank" rel="noopener"><strong>app.netlify.com/signup</strong></a></div></div>
+    <div class="instruction"><div class="n">2</div><div class="txt">Click <strong>"Sign up with GitHub"</strong> — this automatically links your GitHub account, no separate password needed</div></div>
+    <div class="instruction"><div class="n">3</div><div class="txt">Authorise Netlify to access your GitHub → you'll land on the Netlify dashboard</div></div>
+    <a href="https://app.netlify.com/signup" target="_blank" rel="noopener" class="btn-ext">🌐 Open Netlify Signup →</a>
+    <button class="btn-done" onclick="markDone(3)">✅ Done — Netlify account ready</button>
+  </div>
+</div>
+
+<!-- Step 5 -->
+<div class="step" id="step-4">
+  <div class="step-head" onclick="toggleStep(4)">
+    <div class="step-num">5</div>
+    <div style="flex:1">
+      <div class="step-title">Connect your GitHub repository</div>
+      <div class="step-subtitle">This is what enables auto-deploy on every push</div>
+    </div>
+    <span class="step-check">▾</span>
+  </div>
+  <div class="step-body">
+    <div class="instruction"><div class="n">1</div><div class="txt">In the Netlify dashboard, click <strong>"Add new site"</strong> → <strong>"Import an existing project"</strong></div></div>
+    <div class="instruction"><div class="n">2</div><div class="txt">Click <strong>GitHub</strong> as your Git provider</div></div>
+    <div class="instruction"><div class="n">3</div><div class="txt">Search for <strong>diginity-media</strong> → click on your repo</div></div>
+    <div class="img-hint"><strong>What you'll see</strong>Netlify shows a "Configure site" screen with Branch, Build command, and Publish directory fields</div>
+    <button class="btn-done" onclick="markDone(4)">✅ Done — Repo connected</button>
+  </div>
+</div>
+
+<!-- Step 6 -->
+<div class="step" id="step-5">
+  <div class="step-head" onclick="toggleStep(5)">
+    <div class="step-num">6</div>
+    <div style="flex:1">
+      <div class="step-title">Configure deploy settings</div>
+      <div class="step-subtitle">Static site — just set these 2 fields correctly</div>
+    </div>
+    <span class="step-check">▾</span>
+  </div>
+  <div class="step-body">
+    <p class="sub">On the "Configure site and deploy" screen, set these exact values:</p>
+    <div class="cb">
+      <div class="cb-head"><span>Deploy settings</span></div>
+      <div class="cb-body"><pre><span class="ck">Branch to deploy:</span>    <span class="cv">main</span>
+<span class="ck">Build command:</span>       <span class="cs">(leave blank)</span>
+<span class="ck">Publish directory:</span>   <span class="cv">.</span>   ← just a dot (means root folder)</pre></div>
+    </div>
+    <div class="alert ag"><span class="alert-icon">✅</span><div>The <code>netlify.toml</code> file already included in your project sets the publish directory automatically — Netlify will detect it and fill it in for you.</div></div>
+    <div class="instruction"><div class="n">1</div><div class="txt">Confirm Branch = <strong>main</strong>, Build command = <strong>empty</strong>, Publish directory = <strong>.</strong> (a dot)</div></div>
+    <div class="instruction"><div class="n">2</div><div class="txt">Click <strong>"Deploy diginity-media"</strong></div></div>
+    <div class="instruction"><div class="n">3</div><div class="txt">Netlify will show a spinning progress indicator — wait 20–40 seconds</div></div>
+    <button class="btn-done" onclick="markDone(5)">✅ Done — Deploy started</button>
+  </div>
+</div>
+
+<!-- Step 7 -->
+<div class="step" id="step-6">
+  <div class="step-head" onclick="toggleStep(6)">
+    <div class="step-num">7</div>
+    <div style="flex:1">
+      <div class="step-title">Choose your site name & go live</div>
+      <div class="step-subtitle">Get a free yourname.netlify.app URL</div>
+    </div>
+    <span class="step-check">▾</span>
+  </div>
+  <div class="step-body">
+    <p class="sub">Once the deploy finishes, Netlify gives you a random URL like <code>brave-hummingbird-a1b2c3.netlify.app</code>. Let's change it to something clean.</p>
+    <div class="instruction"><div class="n">1</div><div class="txt">In your site dashboard, click <strong>Site configuration</strong> → <strong>Change site name</strong></div></div>
+    <div class="instruction"><div class="n">2</div><div class="txt">Type <strong>diginity-media</strong> (or <strong>diginitymedia</strong>) → Save</div></div>
+    <div class="instruction"><div class="n">3</div><div class="txt">Your site is now live at: <strong>diginity-media.netlify.app</strong> (or whichever name wasn't taken)</div></div>
+    <div class="instruction"><div class="n">4</div><div class="txt">Click the URL → confirm your website loads correctly with HTTPS 🔒</div></div>
+    <div class="alert ag"><span class="alert-icon">🎉</span><div>If the homepage loads and you can click through to inner pages — <strong>you're live!</strong> Share the URL with anyone.</div></div>
+    <button class="btn-done" onclick="markDone(6)">✅ Done — Site is live!</button>
+  </div>
+</div>
+</div>
+
+<!-- ═══ PHASE 3: AFTER DEPLOY ════════════════════════════ -->
+<div class="phase"><div class="phase-label">Phase 3 — After going live</div>
+
+<!-- Step 8 -->
+<div class="step" id="step-7">
+  <div class="step-head" onclick="toggleStep(7)">
+    <div class="step-num">8</div>
+    <div style="flex:1">
+      <div class="step-title">Set up lead notifications (5 min)</div>
+      <div class="step-subtitle">Get emailed every time someone fills the contact form</div>
+    </div>
+    <span class="step-check">▾</span>
+  </div>
+  <div class="step-body">
+    <p class="sub">Your contact form is already wired to Netlify Forms — it stores every submission in your dashboard automatically. Now let's get email alerts too.</p>
+
+    <p style="font-weight:700;margin-bottom:10px;font-size:14px">Enable Netlify Forms notifications:</p>
+    <div class="instruction"><div class="n">1</div><div class="txt">Netlify dashboard → your site → <strong>Forms</strong> tab</div></div>
+    <div class="instruction"><div class="n">2</div><div class="txt">You'll see <strong>diginity-leads</strong> listed. Click it → <strong>Form notifications</strong></div></div>
+    <div class="instruction"><div class="n">3</div><div class="txt">Click <strong>Add notification</strong> → Email notification → enter <strong>diginitymedia@gmail.com</strong> → Save</div></div>
+    <div class="instruction"><div class="n">4</div><div class="txt">Test it: submit the contact form on your live site → check your Gmail within 60 seconds</div></div>
+
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--bdr)">
+      <p style="font-weight:700;margin-bottom:10px;font-size:14px">How auto-deploy works going forward:</p>
+      <div class="alert ab"><span class="alert-icon">🔄</span><div>
+        Whenever you want to update your site: go to your GitHub repo → click a file to edit → make changes → <strong>Commit changes</strong> → Netlify auto-deploys in ~20 seconds. No re-uploading to Netlify needed.
+      </div></div>
+    </div>
+
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--bdr)">
+      <p style="font-weight:700;margin-bottom:10px;font-size:14px">Optional but recommended this week:</p>
+      <div class="instruction"><div class="n">A</div><div class="txt"><strong>Google Search Console</strong> — go to <a href="https://search.google.com/search-console" target="_blank">search.google.com/search-console</a> → Add property → paste your <code>diginity-media.netlify.app</code> URL → verify → submit <code>sitemap.xml</code></div></div>
+      <div class="instruction"><div class="n">B</div><div class="txt"><strong>Google Business Profile</strong> — go to <a href="https://business.google.com" target="_blank">business.google.com</a> → claim or create your profile → add your website URL</div></div>
+      <div class="instruction"><div class="n">C</div><div class="txt"><strong>Google Analytics</strong> — go to <a href="https://analytics.google.com" target="_blank">analytics.google.com</a> → create a GA4 property → copy your Measurement ID (starts with G-) → open <code>index.html</code> on GitHub → find <code>G-REPLACE-WITH-YOUR-GA4-ID</code> → replace it → commit</div></div>
+    </div>
+
+    <button class="btn-done" onclick="markDone(7)">✅ Done — Everything is set up!</button>
+  </div>
+</div>
+</div>
+
+<!-- SUCCESS SUMMARY -->
+<div class="summary" id="summary">
+  <h3>🎉 Your site is live!</h3>
+  <p>Here's your new live URL — share it anywhere:</p>
+  <div class="url-box" id="live-url">https://diginity-media.netlify.app</div>
+  <div class="btn-row">
+    <a href="https://diginity-media.netlify.app" target="_blank" rel="noopener" class="btn-g">🌐 Open Live Site →</a>
+    <a href="https://app.netlify.com" target="_blank" rel="noopener" class="btn-g" style="background:var(--blue)">⚙️ Open Netlify Dashboard</a>
+  </div>
+  <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--bdr)">
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px"><strong style="color:var(--txt)">Next time you want to update the site:</strong></p>
+    <div class="cb"><div class="cb-body"><pre><span class="cm"># Option A — edit files directly on GitHub:</span>
+github.com/YOUR-USERNAME/diginity-media → click any file → edit → commit
+
+<span class="cm"># Option B — from your computer (advanced):</span>
+<span class="cv">git</span> add .
+<span class="cv">git</span> commit -m <span class="cs">"Update service page"</span>
+<span class="cv">git</span> push
+
+<span class="cm"># Netlify auto-deploys in ~20 seconds after every push ✅</span></pre></div></div>
+  </div>
+</div>
+
+<!-- TROUBLESHOOTING -->
+<div style="margin-top:40px;padding:24px;background:var(--surf);border:1px solid var(--bdr);border-radius:16px">
+  <h3 style="font-size:16px;font-weight:800;margin-bottom:16px">🔧 Common issues & fixes</h3>
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <div style="font-size:14px">
+      <strong style="color:var(--yellow)">Site deploys but shows blank page</strong>
+      <p style="color:var(--muted);margin-top:4px">Check that <code>index.html</code> is at the root of your repo (not inside a subfolder). GitHub repo should show <code>index.html</code> as the first file, not a <code>diginity-media/</code> folder.</p>
+    </div>
+    <div style="font-size:14px;border-top:1px solid var(--bdr);padding-top:14px">
+      <strong style="color:var(--yellow)">Inner pages / navigation not working on Netlify</strong>
+      <p style="color:var(--muted);margin-top:4px">This shouldn't happen since the site uses hash-based routing — but if it does, check that <code>netlify.toml</code> was uploaded and appears in your repo.</p>
+    </div>
+    <div style="font-size:14px;border-top:1px solid var(--bdr);padding-top:14px">
+      <strong style="color:var(--yellow)">Contact form submissions not appearing</strong>
+      <p style="color:var(--muted);margin-top:4px">Go to Netlify → Forms — the form needs at least one real submission to appear. Submit a test entry on your live site, then check the Forms tab.</p>
+    </div>
+    <div style="font-size:14px;border-top:1px solid var(--bdr);padding-top:14px">
+      <strong style="color:var(--yellow)">GitHub upload getting stuck / timing out</strong>
+      <p style="color:var(--muted);margin-top:4px">GitHub has a file-count limit for browser uploads. Upload in batches: first <code>index.html</code> + root files, then commit; then upload the <code>pages/</code> folder and commit separately.</p>
+    </div>
+    <div style="font-size:14px;border-top:1px solid var(--bdr);padding-top:14px">
+      <strong style="color:var(--yellow)">Want to add a real domain later (e.g. diginity.in)?</strong>
+      <p style="color:var(--muted);margin-top:4px">Buy the domain from GoDaddy or Namecheap → Netlify dashboard → Domain management → Add custom domain → follow the nameserver instructions. HTTPS is automatically provisioned, free.</p>
+    </div>
+  </div>
+</div>
+
+</div></main>
+<footer>Diginity Media · Deploy Guide · diginitymedia@gmail.com</footer>
+
+<script>
+const TOTAL = 8;
+let completed = new Set();
+
+function toggleStep(i){
+  const el = document.getElementById('step-'+i);
+  el.classList.toggle('open');
+  el.querySelector('.step-check').textContent = el.classList.contains('open') ? '▴' : '▾';
+}
+
+function markDone(i){
+  completed.add(i);
+  const step = document.getElementById('step-'+i);
+  step.classList.add('completed');
+  step.classList.remove('open');
+  step.querySelector('.step-num').textContent = '✓';
+  step.querySelector('.step-check').textContent = '▾';
+
+  // Update tracker
+  const dot = document.getElementById('td'+i);
+  if(dot){ dot.classList.remove('active'); dot.classList.add('done'); dot.textContent='✓'; }
+  const line = document.getElementById('tl'+i);
+  if(line) line.classList.add('done');
+  const nextDot = document.getElementById('td'+(i+1));
+  if(nextDot) nextDot.classList.add('active');
+
+  // Auto-open next step
+  const next = document.getElementById('step-'+(i+1));
+  if(next && !next.classList.contains('open')){
+    next.classList.add('open');
+    next.querySelector('.step-check').textContent = '▴';
+    next.scrollIntoView({behavior:'smooth', block:'start'});
+    setTimeout(()=>{ window.scrollBy(0,-80); }, 300);
+  }
+
+  // Show summary when all done
+  if(completed.size === TOTAL){
+    const s = document.getElementById('summary');
+    s.style.display = 'block';
+    s.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
+
+function jumpTo(i){
+  const el = document.getElementById('step-'+i);
+  if(el){
+    document.querySelectorAll('.step.open').forEach(s=>{
+      s.classList.remove('open');
+      s.querySelector('.step-check').textContent='▾';
+    });
+    el.classList.add('open');
+    el.querySelector('.step-check').textContent='▴';
+    el.scrollIntoView({behavior:'smooth',block:'start'});
+    setTimeout(()=>window.scrollBy(0,-80),300);
+  }
+}
+
+// Copy button
+document.querySelectorAll('.cb-copy').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const text = btn.closest('.cb').querySelector('pre').innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const orig = btn.textContent;
+      btn.textContent = '✅ Copied!';
+      setTimeout(()=>btn.textContent=orig, 2000);
+    });
+  });
+});
+</script>
+</body>
+</html>

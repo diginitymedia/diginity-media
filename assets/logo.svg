@@ -1,0 +1,162 @@
+<svg viewBox="0 0 680 520" fill="none" xmlns="http://www.w3.org/2000/svg" width="680" height="520">
+  <title>Diginity Media — Logo System</title>
+
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00FFB2"/><stop offset="100%" stop-color="#5B8EFF"/></linearGradient>
+    <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00FFB2"/><stop offset="100%" stop-color="#5B8EFF"/></linearGradient>
+    <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="60%" stop-color="#E4EEFF"/><stop offset="100%" stop-color="#8AACFF"/></linearGradient>
+    <linearGradient id="gDark" x1="0%" y1="0%" x2="110%" y2="100%"><stop offset="0%" stop-color="#080C18"/><stop offset="100%" stop-color="#0D1524"/></linearGradient>
+    <linearGradient id="gGlow" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#00FFB2" stop-opacity="0.13"/><stop offset="100%" stop-color="#5B8EFF" stop-opacity="0"/></linearGradient>
+    <clipPath id="mc"><rect x="24" y="16" width="632" height="290" rx="24"/></clipPath>
+  </defs>
+
+  <!-- ── MAIN HERO CARD ── -->
+  <rect x="24" y="16" width="632" height="290" rx="24" fill="url(#gDark)"/>
+
+  <!-- Dot grid texture -->
+  <g clip-path="url(#mc)" opacity="0.065" fill="#fff">
+    <circle cx="90"  cy="55"  r="1.3"/><circle cx="150" cy="55"  r="1.3"/><circle cx="210" cy="55"  r="1.3"/><circle cx="270" cy="55"  r="1.3"/><circle cx="330" cy="55"  r="1.3"/><circle cx="390" cy="55"  r="1.3"/><circle cx="450" cy="55"  r="1.3"/><circle cx="510" cy="55"  r="1.3"/><circle cx="570" cy="55"  r="1.3"/><circle cx="630" cy="55"  r="1.3"/>
+    <circle cx="90"  cy="115" r="1.3"/><circle cx="150" cy="115" r="1.3"/><circle cx="210" cy="115" r="1.3"/><circle cx="270" cy="115" r="1.3"/><circle cx="330" cy="115" r="1.3"/><circle cx="390" cy="115" r="1.3"/><circle cx="450" cy="115" r="1.3"/><circle cx="510" cy="115" r="1.3"/><circle cx="570" cy="115" r="1.3"/>
+    <circle cx="90"  cy="175" r="1.3"/><circle cx="150" cy="175" r="1.3"/><circle cx="210" cy="175" r="1.3"/><circle cx="270" cy="175" r="1.3"/><circle cx="330" cy="175" r="1.3"/><circle cx="390" cy="175" r="1.3"/><circle cx="450" cy="175" r="1.3"/><circle cx="510" cy="175" r="1.3"/>
+    <circle cx="90"  cy="235" r="1.3"/><circle cx="150" cy="235" r="1.3"/><circle cx="210" cy="235" r="1.3"/><circle cx="270" cy="235" r="1.3"/><circle cx="330" cy="235" r="1.3"/>
+  </g>
+
+  <!-- Glow bloom -->
+  <ellipse cx="145" cy="153" rx="135" ry="115" fill="url(#gGlow)" clip-path="url(#mc)"/>
+
+  <!-- Card border -->
+  <rect x="24" y="16" width="632" height="290" rx="24" fill="none" stroke="url(#g1)" stroke-width="1" stroke-opacity="0.3"/>
+
+  <!-- ── ICON MARK ── -->
+  <!-- Container box -->
+  <rect x="56" y="96" width="108" height="108" rx="22" fill="#00FFB2" fill-opacity="0.055" stroke="url(#g1)" stroke-width="1" stroke-opacity="0.32"/>
+  <!-- D — left vertical bar -->
+  <path d="M90 118 L90 200" stroke="url(#g1)" stroke-width="12" stroke-linecap="round"/>
+  <!-- D — right arc -->
+  <path d="M90 118 Q155 118 155 159 Q155 200 90 200" fill="none" stroke="url(#g1)" stroke-width="12" stroke-linecap="round"/>
+  <!-- Arrow inside D — the growth story -->
+  <line x1="122" y1="188" x2="122" y2="143" stroke="#00FFB2" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M109 157 L122 140 L135 157" fill="none" stroke="#00FFB2" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Accent dots -->
+  <circle cx="151" cy="107" r="5.5" fill="url(#g1)"/>
+  <circle cx="67"  cy="193" r="3.5" fill="#5B8EFF" opacity="0.55"/>
+
+  <!-- ── WORDMARK ── -->
+  <text x="194" y="170"
+    font-family="'Trebuchet MS','Arial Black',Arial,sans-serif"
+    font-size="66" font-weight="900" letter-spacing="-2.5"
+    fill="url(#g3)">Diginity</text>
+  <!-- Gradient rule -->
+  <rect x="194" y="178" width="348" height="3" rx="1.5" fill="url(#g2)" opacity="0.55"/>
+  <!-- MEDIA -->
+  <text x="197" y="208"
+    font-family="'Trebuchet MS',Arial,sans-serif"
+    font-size="16" font-weight="700" letter-spacing="10"
+    fill="#5B8EFF" opacity="0.95">MEDIA</text>
+  <!-- Tagline -->
+  <text x="197" y="238"
+    font-family="'Trebuchet MS',Arial,sans-serif"
+    font-size="14" font-weight="400" letter-spacing="0.4"
+    fill="#6478A0">Infinite Digital Growth</text>
+  <!-- Accent dots -->
+  <circle cx="197" cy="260" r="3.2" fill="#00FFB2" opacity="0.9"/>
+  <circle cx="209" cy="260" r="3.2" fill="url(#g1)" opacity="0.6"/>
+  <circle cx="221" cy="260" r="3.2" fill="#5B8EFF" opacity="0.35"/>
+
+  <!-- Subtle chart art — right background -->
+  <g clip-path="url(#mc)">
+    <path d="M498,285 L522,252 L546,260 L568,228 L590,234 L614,208 L638,190" fill="none" stroke="url(#g2)" stroke-width="1.5" stroke-opacity="0.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M498,285 L522,252 L546,260 L568,228 L590,234 L614,208 L638,190 L656,175 L656,305 L498,305 Z" fill="url(#g1)" opacity="0.04"/>
+    <circle cx="522" cy="252" r="2.5" fill="#00FFB2" opacity="0.35"/>
+    <circle cx="568" cy="228" r="2.5" fill="#00FFB2" opacity="0.5"/>
+    <circle cx="614" cy="208" r="3"   fill="#00FFB2" opacity="0.65"/>
+    <circle cx="638" cy="190" r="4"   fill="#00FFB2" opacity="0.9"/>
+  </g>
+
+  <!-- Footer rule inside card -->
+  <line x1="56" y1="282" x2="624" y2="282" stroke="#fff" stroke-width="0.5" stroke-opacity="0.07"/>
+  <text x="340" y="298" text-anchor="middle"
+    font-family="'Trebuchet MS',Arial,sans-serif"
+    font-size="11" letter-spacing="3.5" fill="#3A4E68">DIGINITY.IN  ·  BANGALORE, INDIA</text>
+
+  <!-- ── VARIANT LABEL ── -->
+  <text x="340" y="340" text-anchor="middle"
+    font-family="'Trebuchet MS',Arial,sans-serif"
+    font-size="10" letter-spacing="3.5" fill="#3A4E68">LOGO VARIANTS</text>
+
+  <!-- ── VARIANT A: App Icon / Favicon ── -->
+  <rect x="44" y="356" width="92" height="92" rx="20" fill="#07090F"/>
+  <rect x="44" y="356" width="92" height="92" rx="20" fill="none" stroke="url(#g1)" stroke-width="1" stroke-opacity="0.38"/>
+  <path d="M74 376 L74 428" stroke="url(#g1)" stroke-width="8" stroke-linecap="round"/>
+  <path d="M74 376 Q110 376 110 402 Q110 428 74 428" fill="none" stroke="url(#g1)" stroke-width="8" stroke-linecap="round"/>
+  <line x1="92" y1="420" x2="92" y2="394" stroke="#00FFB2" stroke-width="3" stroke-linecap="round"/>
+  <path d="M83 405 L92 391 L101 405" fill="none" stroke="#00FFB2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="107" cy="367" r="4" fill="url(#g1)"/>
+  <text x="90" y="470" text-anchor="middle"
+    font-family="'Trebuchet MS',Arial,sans-serif"
+    font-size="10" letter-spacing="1" fill="#3A4E68">APP / FAVICON</text>
+
+  <!-- ── VARIANT B: Horizontal dark card ── -->
+  <rect x="158" y="356" width="234" height="92" rx="17" fill="#07090F"/>
+  <rect x="158" y="356" width="234" height="92" rx="17" fill="none" stroke="url(#g1)" stroke-width="0.8" stroke-opacity="0.32"/>
+  <path d="M185 380 L185 428" stroke="url(#g1)" stroke-width="7" stroke-linecap="round"/>
+  <path d="M185 380 Q214 380 214 404 Q214 428 185 428" fill="none" stroke="url(#g1)" stroke-width="7" stroke-linecap="round"/>
+  <line x1="200" y1="421" x2="200" y2="399" stroke="#00FFB2" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M193 409 L200 397 L207 409" fill="none" stroke="#00FFB2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="211" cy="370" r="3.5" fill="url(#g1)"/>
+  <text x="228" y="400"
+    font-family="'Trebuchet MS','Arial Black',Arial,sans-serif"
+    font-size="24" font-weight="900" letter-spacing="-0.8"
+    fill="url(#g3)">Diginity</text>
+  <text x="229" y="417"
+    font-family="'Trebuchet MS',Arial,sans-serif"
+    font-size="9" font-weight="700" letter-spacing="5.5"
+    fill="#5B8EFF">MEDIA</text>
+  <rect x="229" y="422" width="122" height="1.5" rx="1" fill="url(#g2)" opacity="0.48"/>
+  <text x="229" y="438"
+    font-family="'Trebuchet MS',Arial,sans-serif"
+    font-size="9" fill="#445A80">Infinite Digital Growth</text>
+  <text x="275" y="470" text-anchor="middle"
+    font-family="'Trebuchet MS',Arial,sans-serif"
+    font-size="10" letter-spacing="1" fill="#3A4E68">DARK LOCKUP</text>
+
+  <!-- ── VARIANT C: Light card ── -->
+  <rect x="414" y="356" width="234" height="92" rx="17" fill="#EEF4FF"/>
+  <rect x="414" y="356" width="234" height="92" rx="17" fill="none" stroke="#BACCEC" stroke-width="0.8"/>
+  <path d="M441 380 L441 428" stroke="#1040B0" stroke-width="7" stroke-linecap="round"/>
+  <path d="M441 380 Q470 380 470 404 Q470 428 441 428" fill="none" stroke="#1040B0" stroke-width="7" stroke-linecap="round"/>
+  <line x1="456" y1="421" x2="456" y2="399" stroke="#0DB870" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M449 409 L456 397 L463 409" fill="none" stroke="#0DB870" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="467" cy="370" r="3.5" fill="#1040B0"/>
+  <text x="484" y="400"
+    font-family="'Trebuchet MS','Arial Black',Arial,sans-serif"
+    font-size="24" font-weight="900" letter-spacing="-0.8"
+    fill="#0A1840">Diginity</text>
+  <text x="485" y="417"
+    font-family="'Trebuchet MS',Arial,sans-serif"
+    font-size="9" font-weight="700" letter-spacing="5.5"
+    fill="#1040B0">MEDIA</text>
+  <rect x="485" y="422" width="122" height="1.5" rx="1" fill="#1040B0" opacity="0.3"/>
+  <text x="485" y="438"
+    font-family="'Trebuchet MS',Arial,sans-serif"
+    font-size="9" fill="#4455A0">Infinite Digital Growth</text>
+  <text x="531" y="470" text-anchor="middle"
+    font-family="'Trebuchet MS',Arial,sans-serif"
+    font-size="10" letter-spacing="1" fill="#3A4E68">LIGHT LOCKUP</text>
+
+  <!-- ── COLOUR SWATCHES ── -->
+  <text x="340" y="496" text-anchor="middle"
+    font-family="'Trebuchet MS',Arial,sans-serif"
+    font-size="10" letter-spacing="3" fill="#3A4E68">BRAND COLOURS</text>
+
+  <rect x="44"  y="504" width="44" height="12" rx="4" fill="#00FFB2"/>
+  <rect x="96"  y="504" width="44" height="12" rx="4" fill="#5B8EFF"/>
+  <rect x="148" y="504" width="44" height="12" rx="4" fill="#07090F" stroke="#2A3A5A" stroke-width="0.5"/>
+  <rect x="200" y="504" width="44" height="12" rx="4" fill="#EEF4FF" stroke="#BACCEC" stroke-width="0.5"/>
+
+  <text x="66"  y="512" text-anchor="middle" font-family="'Trebuchet MS',Arial,sans-serif" font-size="7.5" fill="#07090F">#00FFB2</text>
+  <text x="118" y="512" text-anchor="middle" font-family="'Trebuchet MS',Arial,sans-serif" font-size="7.5" fill="#fff">#5B8EFF</text>
+  <text x="170" y="512" text-anchor="middle" font-family="'Trebuchet MS',Arial,sans-serif" font-size="7.5" fill="#5B8EFF">#07090F</text>
+  <text x="222" y="512" text-anchor="middle" font-family="'Trebuchet MS',Arial,sans-serif" font-size="7.5" fill="#1040B0">#EEF4FF</text>
+
+</svg>
