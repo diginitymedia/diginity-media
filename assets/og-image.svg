@@ -1,0 +1,96 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#07090F"/>
+      <stop offset="100%" stop-color="#0D1117"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="600" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3DFFA0"/>
+      <stop offset="100%" stop-color="#4D8EFF"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="0" y2="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3DFFA0" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#3DFFA0" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Subtle grid lines -->
+  <g opacity="0.04" stroke="#ffffff" stroke-width="1">
+    <line x1="0" y1="105" x2="1200" y2="105"/>
+    <line x1="0" y1="210" x2="1200" y2="210"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="0" y1="420" x2="1200" y2="420"/>
+    <line x1="0" y1="525" x2="1200" y2="525"/>
+    <line x1="200" y1="0" x2="200" y2="630"/>
+    <line x1="400" y1="0" x2="400" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="800" y1="0" x2="800" y2="630"/>
+    <line x1="1000" y1="0" x2="1000" y2="630"/>
+  </g>
+
+  <!-- Glow orb top left -->
+  <ellipse cx="150" cy="150" rx="300" ry="300" fill="url(#glow)" opacity="0.6"/>
+
+  <!-- Top accent bar -->
+  <rect x="0" y="0" width="1200" height="4" fill="url(#accent)"/>
+
+  <!-- Logo mark -->
+  <rect x="80" y="80" width="64" height="64" rx="16" fill="url(#accent)"/>
+  <text x="112" y="124" font-family="Arial Black, Arial" font-size="36" font-weight="900" fill="#07090F" text-anchor="middle">D</text>
+
+  <!-- Brand name -->
+  <text x="162" y="104" font-family="Arial Black, Arial" font-size="26" font-weight="900" fill="#EEF2FF">Diginity</text>
+  <text x="162" y="130" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#7A8BA0" letter-spacing="4">MEDIA</text>
+
+  <!-- Main headline -->
+  <text x="80" y="260" font-family="Arial Black, Arial" font-size="62" font-weight="900" fill="#EEF2FF">#1 Digital Marketing</text>
+  <text x="80" y="340">
+    <tspan font-family="Arial Black, Arial" font-size="62" font-weight="900" fill="url(#accent)">Agency in Bangalore</tspan>
+  </text>
+
+  <!-- Tagline -->
+  <text x="80" y="410" font-family="Arial, sans-serif" font-size="24" fill="#7A8BA0">SEO · Paid Ads · Social Media · Web Dev · Business Technology Consulting</text>
+
+  <!-- Stats row -->
+  <g transform="translate(80, 480)">
+    <!-- Stat 1 -->
+    <rect width="180" height="80" rx="12" fill="#111820" stroke="#1E2A3A" stroke-width="1"/>
+    <text x="90" y="35" font-family="Arial Black, Arial" font-size="28" font-weight="900" fill="#3DFFA0" text-anchor="middle">150+</text>
+    <text x="90" y="58" font-family="Arial, sans-serif" font-size="12" fill="#7A8BA0" text-anchor="middle">Brands Scaled</text>
+
+    <!-- Stat 2 -->
+    <rect x="200" width="180" height="80" rx="12" fill="#111820" stroke="#1E2A3A" stroke-width="1"/>
+    <text x="290" y="35" font-family="Arial Black, Arial" font-size="28" font-weight="900" fill="#4D8EFF" text-anchor="middle">8×</text>
+    <text x="290" y="58" font-family="Arial, sans-serif" font-size="12" fill="#7A8BA0" text-anchor="middle">Avg ROI</text>
+
+    <!-- Stat 3 -->
+    <rect x="400" width="180" height="80" rx="12" fill="#111820" stroke="#1E2A3A" stroke-width="1"/>
+    <text x="490" y="35" font-family="Arial Black, Arial" font-size="28" font-weight="900" fill="#3DFFA0" text-anchor="middle">6.2×</text>
+    <text x="490" y="58" font-family="Arial, sans-serif" font-size="12" fill="#7A8BA0" text-anchor="middle">Avg ROAS</text>
+  </g>
+
+  <!-- Right side decorative card -->
+  <rect x="820" y="120" width="300" height="380" rx="20" fill="#0D1117" stroke="#1E2A3A" stroke-width="1" opacity="0.8"/>
+  <rect x="820" y="120" width="300" height="4" rx="0" fill="url(#accent)"/>
+  <text x="970" y="180" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#3DFFA0" text-anchor="middle" letter-spacing="3">MONTHLY ORGANIC TRAFFIC</text>
+  <text x="970" y="250" font-family="Arial Black, Arial" font-size="52" font-weight="900" fill="#EEF2FF" text-anchor="middle">+420%</text>
+  <text x="970" y="285" font-family="Arial, sans-serif" font-size="14" fill="#7A8BA0" text-anchor="middle">Average client growth</text>
+  <line x1="850" y1="310" x2="1090" y2="310" stroke="#1E2A3A" stroke-width="1"/>
+
+  <!-- Mini chart bars -->
+  <g transform="translate(870,330)">
+    <rect x="0" y="70" width="28" height="30" rx="4" fill="#1E2A3A"/>
+    <rect x="36" y="50" width="28" height="50" rx="4" fill="#1E2A3A"/>
+    <rect x="72" y="30" width="28" height="70" rx="4" fill="#3DFFA0" opacity="0.4"/>
+    <rect x="108" y="10" width="28" height="90" rx="4" fill="#3DFFA0" opacity="0.7"/>
+    <rect x="144" y="0" width="28" height="100" rx="4" fill="#3DFFA0"/>
+  </g>
+  <text x="970" y="470" font-family="Arial, sans-serif" font-size="13" fill="#7A8BA0" text-anchor="middle">diginitymedia@gmail.com</text>
+
+  <!-- Bottom URL -->
+  <text x="80" y="600" font-family="Arial, sans-serif" font-size="16" fill="#3DFFA0">diginitymedia.netlify.app</text>
+  <text x="1120" y="600" font-family="Arial, sans-serif" font-size="14" fill="#7A8BA0" text-anchor="end">Bangalore, India</text>
+</svg>
