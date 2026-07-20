@@ -2619,6 +2619,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <li><a href="javascript:void(0)" onclick="showPage('careers')">Careers</a></li>
           <li><a href="#contact" onclick="return navTo('contact')">Contact</a></li>
           <li><a href="pages/sitemap.html">Sitemap</a></li>
+          <li><a href="pages/tools/admin-dashboard.html" style="color:var(--green)">Admin Panel</a></li>
         </ul>
       </div>
       <div class="foot-col">
@@ -5236,6 +5237,158 @@ Be friendly, concise (2-3 sentences max per reply), and always offer to connect 
     origShowPage && origShowPage(id, push);
     setTimeout(initReveal, 50);
   };
+})();
+</script>
+
+
+<!-- ═══ DYNAMIC CONTENT LOADER (Services + Blog from Backend API) ═══
+     Set BACKEND_URL to your Railway URL after deploying the backend.
+     Leave blank to use hardcoded content (works without backend).
+═══════════════════════════════════════════════════════════════════ -->
+<script>
+(function(){
+  /* ── CONFIG: set this after deploying backend to Railway ──────────
+     Example: const BACKEND_URL = 'https://diginity-backend.up.railway.app';
+     Leave empty string '' to use only hardcoded content.
+  ──────────────────────────────────────────────────────────────── */
+  const BACKEND_URL = '';  // ← REPLACE with your Railway URL after deploying
+
+  if (!BACKEND_URL) return; // No backend configured — use hardcoded content
+
+  const CACHE_TTL = 5 * 60 * 1000; // 5 min cache
+
+  function cached(key) {
+    try {
+      const d = JSON.parse(localStorage.getItem('dm_' + key) || 'null');
+      if (d && Date.now() - d.ts < CACHE_TTL) return d.data;
+    } catch {}
+    return null;
+  }
+  function cache(key, data) {
+    try { localStorage.setItem('dm_' + key, JSON.stringify({ ts: Date.now(), data })); } catch {}
+  }
+
+  /* ── CATEGORY icon colours matching existing site palette ────── */
+  const CAT_COLOURS = {
+    seo:'rgba(61,255,160,.12)', paid:'rgba(77,142,255,.12)', social:'rgba(155,89,182,.12)',
+    web:'rgba(255,209,102,.12)', content:'rgba(61,255,160,.12)', email:'rgba(77,142,255,.12)',
+    video:'rgba(255,107,107,.12)', ecom:'rgba(37,211,102,.12)', ai:'rgba(77,142,255,.12)',
+    software:'rgba(61,255,160,.12)'
+  };
+
+  /* ── RENDER DYNAMIC SERVICE CARDS ───────────────────────────────
+     Injects API services as additional cards in the services grid.
+     Existing hardcoded cards stay — API cards are appended after.
+     To replace hardcoded entirely, add data-dynamic="true" to the
+     services grid div and this will clear it first.
+  ────────────────────────────────────────────────────────────────*/
+  async function loadServices() {
+    let services = cached('services');
+    if (!services) {
+      try {
+        const r = await fetch(BACKEND_URL + '/api/services', { signal: AbortSignal.timeout(4000) });
+        const d = await r.json();
+        if (d.ok && d.services?.length) { services = d.services; cache('services', services); }
+      } catch { return; } // backend unreachable — use hardcoded silently
+    }
+    if (!services?.length) return;
+
+    // Find the service grid
+    const grid = document.querySelector('.svc-grid');
+    if (!grid) return;
+
+    // Only inject services NOT already represented (avoid dupes by checking name)
+    const existingNames = new Set(
+      [...grid.querySelectorAll('h3')].map(h => h.textContent.trim().toLowerCase())
+    );
+
+    services.forEach(svc => {
+      if (existingNames.has(svc.name.toLowerCase())) return; // skip if already hardcoded
+      const bg = CAT_COLOURS[svc.category] || 'rgba(61,255,160,.08)';
+      const chips = (svc.chips || []).map(c => `<span class="chip">${c}</span>`).join('');
+      const card = document.createElement('div');
+      card.className = 'sc' + (svc.featured ? ' feat' : '');
+      card.dataset.cat = svc.category;
+      card.innerHTML = `
+        <div class="sico" style="background:${bg}">${svc.icon || '🔧'}</div>
+        <h3>${svc.name}</h3>
+        <p>${svc.desc}</p>
+        <div class="chips">${chips}</div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  /* ── RENDER DYNAMIC BLOG CARDS ──────────────────────────────────
+     Replaces the blog grid with API posts when backend is available.
+     Falls back to hardcoded cards if API unreachable.
+  ────────────────────────────────────────────────────────────────*/
+  const BLOG_THUMB_COLOURS = [
+    'linear-gradient(135deg,#0D2B1A,#0A1F2E)',
+    'linear-gradient(135deg,#0D1A2B,#1A0D2B)',
+    'linear-gradient(135deg,#2B1A0D,#1A0D1A)',
+    'linear-gradient(135deg,#0D2B1A,#0D2B2B)',
+    'linear-gradient(135deg,#1A1A0D,#2B1A0D)',
+    'linear-gradient(135deg,#0D1A2B,#0D2B1A)',
+  ];
+  const BLOG_PILL_STYLES = {
+    'SEO':                  'background:rgba(61,255,160,.15);color:#3DFFA0',
+    'AI Marketing':         'background:rgba(77,142,255,.15);color:#4D8EFF',
+    'Performance Marketing':'background:rgba(255,107,107,.15);color:#FF6B6B',
+    'Social Media':         'background:rgba(37,211,102,.15);color:#25D366',
+    'Web Development':      'background:rgba(255,209,102,.15);color:#FFD166',
+    'Local SEO':            'background:rgba(61,255,160,.15);color:#3DFFA0',
+    'Content Marketing':    'background:rgba(77,142,255,.15);color:#4D8EFF',
+    'General':              'background:rgba(122,139,160,.15);color:#9AA3B4',
+  };
+
+  async function loadBlog() {
+    let posts = cached('blog');
+    if (!posts) {
+      try {
+        const r = await fetch(BACKEND_URL + '/api/blog?published=true', { signal: AbortSignal.timeout(4000) });
+        const d = await r.json();
+        if (d.ok && d.posts?.length) { posts = d.posts; cache('blog', posts); }
+      } catch { return; }
+    }
+    if (!posts?.length) return;
+
+    const grid = document.querySelector('.blog-grid');
+    if (!grid) return;
+
+    // Replace blog grid with API posts
+    grid.innerHTML = posts.slice(0, 6).map((p, i) => {
+      const thumb  = BLOG_THUMB_COLOURS[i % BLOG_THUMB_COLOURS.length];
+      const pill   = BLOG_PILL_STYLES[p.category] || BLOG_PILL_STYLES['General'];
+      const href   = BACKEND_URL + '/api/blog/' + p.slug;
+      // If post has a file path use it, otherwise link to backend
+      const postUrl = p.filePath || (BACKEND_URL + '/post/' + p.slug);
+      return `
+        <a href="${postUrl}" target="_blank" rel="noopener" class="blc">
+          <div class="bl-thumb" style="background:${thumb}">
+            <span style="position:relative;z-index:1">${p.icon || '📝'}</span>
+            <div class="bl-pill" style="${pill}">${p.category}</div>
+            <div class="bl-readtime">${p.readTime || 5} min read</div>
+          </div>
+          <div class="bl-body">
+            <h3>${p.title}</h3>
+            <p>${p.excerpt || ''}</p>
+            <div class="bl-footer">
+              <span class="bl-date">${p.publishedAt || ''}</span>
+              <div class="bl-arrow">↗</div>
+            </div>
+          </div>
+        </a>`;
+    }).join('');
+  }
+
+  /* ── INIT: run after DOM is ready ───────────────────────────── */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => { loadServices(); loadBlog(); });
+  } else {
+    loadServices();
+    loadBlog();
+  }
 })();
 </script>
 
